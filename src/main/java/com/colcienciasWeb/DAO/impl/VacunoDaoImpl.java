@@ -82,7 +82,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         try {
             listado = dao.getVacunos();
             for (int i = 0; i < listado.size(); i++) {
-                if (listado.get(i).getID().equals(vacuno.getID())) {
+                if (listado.get(i).getID() == (vacuno.getID())) {
                     dao.actualizarVacuno(vacuno);
                     break;
                 }

@@ -17,20 +17,24 @@ public class Predio {
     String descTipoAlimentacion;
     int idTipoTerreno;
     String descTipoTerreno;
-    int finca;
+    int idFinca;
+    String descFinca;
 
     public Predio() {
     }
 
-    public Predio(int ID, String descripcion, int idTipoAlimentacion, String descTipoAlimentacion, int idTipoTerreno, String descTipoTerreno, int finca) {
+    public Predio(int ID, String descripcion, int idTipoAlimentacion, String descTipoAlimentacion, int idTipoTerreno, String descTipoTerreno, int idFinca, String descFinca) {
         this.ID = ID;
         this.descripcion = descripcion;
         this.idTipoAlimentacion = idTipoAlimentacion;
         this.descTipoAlimentacion = descTipoAlimentacion;
         this.idTipoTerreno = idTipoTerreno;
         this.descTipoTerreno = descTipoTerreno;
-        this.finca = finca;
+        this.idFinca = idFinca;
+        this.descFinca = descFinca;
     }
+
+   
 
     public int getID() {
         return ID;
@@ -80,13 +84,23 @@ public class Predio {
         this.descTipoTerreno = descTipoTerreno;
     }
 
-    public int getFinca() {
-        return finca;
+    public int getIdFinca() {
+        return idFinca;
     }
 
-    public void setFinca(int finca) {
-        this.finca = finca;
+    public void setIdFinca(int idFinca) {
+        this.idFinca = idFinca;
     }
+
+    public String getDescFinca() {
+        return descFinca;
+    }
+
+    public void setDescFinca(String descFinca) {
+        this.descFinca = descFinca;
+    }
+
+    
 
     @Override
     public int hashCode() {

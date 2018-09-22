@@ -53,15 +53,17 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result2;
 
-        st = this.getConexion().prepareCall("SELECT \"ID_FINCA\", \"NOMBRE\", \"HECTAREAS\","
-                + " \"DIRECCION\", \"NOMBRE_PROPIETARIO\", \n"
-                + " \"MUNICIPIO\" FROM public.\"FINCA\""
-                + "WHERE \"ID_FINCA\" = '" + idFinca + "'");
+        st = this.getConexion().prepareCall("SELECT F.\"ID_FINCA\", F.\"NOMBRE\", .F\"HECTAREAS\", F.\"DIRECCION\", F.\"NOMBRE_PROPIETARIO\",\n"
+                + " M.\"idMUNICIPIO\" AS IDMUNICIPIO, M.\"DESCRIPCION\"\n"
+                + "FROM public.\"FINCA\" F\n"
+                + "INNER JOIN public.\"MUNICIPIO\" M ON (M.\"idMUNICIPIO\" = F.\"MUNICIPIO\")\n"
+                + "WHERE F.\"ID_FINCA\" " + idFinca + "");
         result2 = st.executeQuery();
         while (result2.next()) {
             finca = new Finca(result2.getInt("ID_FINCA"), result2.getString("NOMBRE"),
                     result2.getDouble("HECTAREAS"), result2.getString("DIRECCION"),
-                    result2.getString("NOMBRE_PROPIETARIO"), result2.getString("MUNICIPIO"));
+                    result2.getString("NOMBRE_PROPIETARIO"), result2.getInt("idMUNICIPIO"),
+                    result2.getString("DESCRIPCION"));
         }
 
         return finca;
@@ -72,8 +74,9 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result2;
 
-        st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", V.\"PESO\", P.\"DESCRIPCION\" AS PREDIO,"
-                + " C.\"DESCRIPCION\" AS  CATEGORIA \n"
+        st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", V.\"PESO\",P.\"ID_PREDIO\" AS IDPREDIO,"
+                + "P.\"DESCRIPCION\" AS PREDIO,"
+                + "C.\"ID_CATEGORIA\" AS  IDCATEGORIA ,C.\"DESCRIPCION\" AS  CATEGORIA \n"
                 + "FROM public.\"VACUNO\" V \n"
                 + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = V.\"PREDIO\")\n"
                 + "INNER JOIN public.\"CATEGORIA_VACUNO\" C ON (C.\"ID_CATEGORIA\" = V.\"CATEGORIA\")\n"
@@ -81,7 +84,8 @@ public class ColcienciasDao extends Conexion {
         result2 = st.executeQuery();
         if (result2.first()) {
             vacuno = new Vacuno(result2.getInt("ID_VACUNO"), result2.getString("RAZA"),
-                    result2.getDouble("PESO"), result2.getString("PREDIO"),);
+                    result2.getDouble("PESO"), result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
+                    result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
         }
 
         return vacuno;
@@ -92,19 +96,23 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result2;
 
-        st = this.getConexion().prepareCall("SELECT P.\"ID_PREDIO\", P.\"DESCRIPCION\", A.\"DESCRIPCION\" AS ALIMENTO, T.\"DESCRIPCION\",\n"
-                + "       F.\"NOMBRE\"\n"
+        st = this.getConexion().prepareCall("SELECT P.\"ID_PREDIO\", P.\"DESCRIPCION\", A.\"ID_TIPO_ALIMENTACION\" AS IDALIMENTO ,A.\"DESCRIPCION\" AS ALIMENTO,"
+                + "T.\"ID_TIPO_TERRENO\" AS IDTERRENO ,T.\"DESCRIPCION\" AS TERRENO,F.\"NOMBRE\"\n"
+                + "F.\"ID_FINCA\" AS IDFINCA ,F.\"NOMBRE\" AS FINCA"
                 + "FROM public.\"PREDIO\" P\n"
                 + "INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = P.\"TIPO_ALIMENTACION\")\n"
                 + "INNER JOIN public.\"TIPO_TERRENO\" T ON (T.\"ID_TIPO_TERRENO\" = P.\"TIPO_TERRENO\")\n"
                 + "INNER JOIN puclic.\"FINCA\" F ON (F.\"ID_FINCA\" = P.\"FINCA\")\n"
-                + "WHERE P.\"ID_PREDIO\" = ??");
-        
+                + "WHERE P.\"ID_PREDIO\" = " + idPredio + "");
+
         result2 = st.executeQuery();
-        if(result2.first()){
+        if (result2.first()) {
             predio = new Predio(result2.getInt("ID_PREDIO"), result2.getString("DESCRIPCION"),
-                    result2.getString("ALIMENTO"), result2.getString("ALIMENTO"), idPredio);
+                    result2.getInt("IDALIMENTO"), result2.getString("ALIMENTO"),
+                    result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
+                    result2.getInt("IDFINCA"), result2.getString("FINCA"));
         }
+        return predio;
     }
 
     public void insertarFinca(Finca finca) throws Exception {
@@ -130,11 +138,11 @@ public class ColcienciasDao extends Conexion {
             idVacuno += Integer.parseInt(id);
             id = Integer.toString(idVacuno);
         }
-        st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"VACUNO\"(\"ID_VACUNO\",\"RAZA\",\"NUMERO_PARTOS\""
-                + ",\"PESO\",\"FINCA\")\n"
-                + "VALUES('" + id + "','" + vacuno.getRaza() + "'," + vacuno.getNumeroPartos() + "," + vacuno.getPeso() + ","
-                + "'" + vacuno.getFinca() + "')");
-        st.executeUpdate();
+//        st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"VACUNO\"(\"ID_VACUNO\",\"RAZA\",\"NUMERO_PARTOS\""
+//                + ",\"PESO\",\"FINCA\")\n"
+//                + "VALUES('" + id + "','" + vacuno.getRaza() + "'," + vacuno.getNumeroPartos() + "," + vacuno.getPeso() + ","
+//                + "'" + vacuno.getFinca() + "')");
+//        st.executeUpdate();
 
     }
 
@@ -151,11 +159,11 @@ public class ColcienciasDao extends Conexion {
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
 
-        st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-                + "  SET \"RAZA\"='" + vacuno.getRaza() + "', \"NUMERO_PARTOS\"=" + vacuno.getNumeroPartos() + ","
-                + " \"PESO\"=" + vacuno.getPeso() + ", \"FINCA\"='" + vacuno.getFinca() + "'\n"
-                + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
-        st.executeUpdate();
+//        st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
+//                + "  SET \"RAZA\"='" + vacuno.getRaza() + "', \"NUMERO_PARTOS\"=" + vacuno.getNumeroPartos() + ","
+//                + " \"PESO\"=" + vacuno.getPeso() + ", \"FINCA\"='" + vacuno.getFinca() + "'\n"
+//                + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
+//        st.executeUpdate();
     }
 
     public void eliminarFinca(Finca finca) throws Exception {
