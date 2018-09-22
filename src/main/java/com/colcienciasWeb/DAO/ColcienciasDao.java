@@ -52,18 +52,17 @@ public class ColcienciasDao extends Conexion {
         Finca finca = null;
         PreparedStatement st;
         ResultSet result2;
-
-        st = this.getConexion().prepareCall("SELECT F.\"ID_FINCA\", F.\"NOMBRE\", .F\"HECTAREAS\", F.\"DIRECCION\", F.\"NOMBRE_PROPIETARIO\",\n"
-                + " M.\"idMUNICIPIO\" AS IDMUNICIPIO, M.\"DESCRIPCION\"\n"
+        st = this.getConexion().prepareCall("SELECT F.\"ID_FINCA\", F.\"NOMBRE\", F.\"HECTAREAS\", F.\"DIRECCION\", F.\"NOMBRE_PROPIETARIO\",\n"
+                + " M.\"idMUNICIPIO\" AS IDMUNICIPIO, M.\"nombre\" as nombremunicipio \n"
                 + "FROM public.\"FINCA\" F\n"
                 + "INNER JOIN public.\"MUNICIPIO\" M ON (M.\"idMUNICIPIO\" = F.\"MUNICIPIO\")\n"
-                + "WHERE F.\"ID_FINCA\" " + idFinca + "");
+                + "WHERE F.\"ID_FINCA\" = " + idFinca + "");
         result2 = st.executeQuery();
         while (result2.next()) {
             finca = new Finca(result2.getInt("ID_FINCA"), result2.getString("NOMBRE"),
                     result2.getDouble("HECTAREAS"), result2.getString("DIRECCION"),
                     result2.getString("NOMBRE_PROPIETARIO"), result2.getInt("idMUNICIPIO"),
-                    result2.getString("DESCRIPCION"));
+                    result2.getString("nombremunicipio"));
         }
 
         return finca;
