@@ -137,11 +137,11 @@ public class ColcienciasDao extends Conexion {
             idVacuno += Integer.parseInt(id);
             id = Integer.toString(idVacuno);
         }
-//        st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"VACUNO\"(\"ID_VACUNO\",\"RAZA\",\"NUMERO_PARTOS\""
-//                + ",\"PESO\",\"FINCA\")\n"
-//                + "VALUES('" + id + "','" + vacuno.getRaza() + "'," + vacuno.getNumeroPartos() + "," + vacuno.getPeso() + ","
-//                + "'" + vacuno.getFinca() + "')");
-//        st.executeUpdate();
+        st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", \"PESO\","
+                + " \"PREDIO\", \"CATEGORIA\")\n"
+                + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getPeso() + "," + vacuno.getIdPredio() + ","
+                + " " + vacuno.getIdCategoria() + ")");
+        st.executeUpdate();
 
     }
 
@@ -158,11 +158,11 @@ public class ColcienciasDao extends Conexion {
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
 
-//        st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-//                + "  SET \"RAZA\"='" + vacuno.getRaza() + "', \"NUMERO_PARTOS\"=" + vacuno.getNumeroPartos() + ","
-//                + " \"PESO\"=" + vacuno.getPeso() + ", \"FINCA\"='" + vacuno.getFinca() + "'\n"
-//                + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
-//        st.executeUpdate();
+        st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
+                + "SET \"PESO\"="+ vacuno.getPeso() +", \"PREDIO\"="+ vacuno.getIdPredio() +","
+                + " \"CATEGORIA\"="+ vacuno.getIdCategoria() +"\n"
+                + " WHERE \"ID_VACUNO\" =  '" + vacuno.getID() + "'");
+        st.executeUpdate();
     }
 
     public void eliminarFinca(Finca finca) throws Exception {
