@@ -16,16 +16,22 @@ public class Vacuno {
     private int ID;
     private String raza;
     private Double peso;
-    private int predio;
-    private int categoria;
+    private int idPredio;
+    private String descipcionPredio;
+    private int idCategoria;
+    private String descripcionPredio;
 
-    public Vacuno(int ID, String raza, Integer numeroPartos, Double peso, String finca) {
+    public Vacuno(int ID, String raza, Double peso, int idPredio, String descipcionPredio, int idCategoria, String descripcionPredio) {
         this.ID = ID;
         this.raza = raza;
-        this.numeroPartos = numeroPartos;
         this.peso = peso;
-        this.finca = finca;
+        this.idPredio = idPredio;
+        this.descipcionPredio = descipcionPredio;
+        this.idCategoria = idCategoria;
+        this.descripcionPredio = descripcionPredio;
     }
+
+    
 
     public Vacuno() {
     }
@@ -46,14 +52,6 @@ public class Vacuno {
         this.raza = raza;
     }
 
-    public Integer getNumeroPartos() {
-        return numeroPartos;
-    }
-
-    public void setNumeroPartos(Integer numeroPartos) {
-        this.numeroPartos = numeroPartos;
-    }
-
     public Double getPeso() {
         return peso;
     }
@@ -62,13 +60,39 @@ public class Vacuno {
         this.peso = peso;
     }
 
-    public String getFinca() {
-        return finca;
+    public int getIdPredio() {
+        return idPredio;
     }
 
-    public void setFinca(String finca) {
-        this.finca = finca;
+    public void setIdPredio(int idPredio) {
+        this.idPredio = idPredio;
     }
+
+    public String getDescipcionPredio() {
+        return descipcionPredio;
+    }
+
+    public void setDescipcionPredio(String descipcionPredio) {
+        this.descipcionPredio = descipcionPredio;
+    }
+
+    public int getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public String getDescripcionPredio() {
+        return descripcionPredio;
+    }
+
+    public void setDescripcionPredio(String descripcionPredio) {
+        this.descripcionPredio = descripcionPredio;
+    }
+
+   
 
     @Override
     public int hashCode() {
