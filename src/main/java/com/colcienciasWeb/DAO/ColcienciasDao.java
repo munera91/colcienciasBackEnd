@@ -25,7 +25,7 @@ public class ColcienciasDao extends Conexion {
         ResultSet result;
         st = this.getConexion().prepareCall("SELECT \"ID_FINCA\", \"NOMBRE\", \"HECTAREAS\", \"DIRECCION\","
                 + " \"NOMBRE_PROPIETARIO\", \n"
-                + "  \"MUNICIPIO\",\"TIPO_TERRENO\"\n"
+                + "  \"MUNICIPIO\"\n"
                 + " FROM public.\"FINCA\"");
         result = st.executeQuery();
         while (result.next()) {
@@ -54,13 +54,13 @@ public class ColcienciasDao extends Conexion {
 
         st = this.getConexion().prepareCall("SELECT \"ID_FINCA\", \"NOMBRE\", \"HECTAREAS\","
                 + " \"DIRECCION\", \"NOMBRE_PROPIETARIO\", \n"
-                + " \"MUNICIPIO\",\"TIPO_TERRENO\" FROM public.\"FINCA\""
+                + " \"MUNICIPIO\" FROM public.\"FINCA\""
                 + "WHERE \"ID_FINCA\" = '" + idFinca + "'");
         result2 = st.executeQuery();
         while (result2.next()) {
-            finca = new Finca(result2.getString("ID_FINCA"), result2.getString("NOMBRE"),
+            finca = new Finca(result2.getInt("ID_FINCA"), result2.getString("NOMBRE"),
                     result2.getDouble("HECTAREAS"), result2.getString("DIRECCION"),
-                    result2.getString("NOMBRE_PROPIETARIO"), result2.getString("MUNICIPIO"), result2.getString("TIPO_TERRENO"));
+                    result2.getString("NOMBRE_PROPIETARIO"), result2.getString("MUNICIPIO"));
         }
 
         return finca;
@@ -86,24 +86,12 @@ public class ColcienciasDao extends Conexion {
 
     public void insertarFinca(Finca finca) throws Exception {
         PreparedStatement st, st2;
-        ResultSet result2;
-        String id = "";
-        int idFinca = 1;
-        st2 = this.getConexion().prepareStatement("SELECT MAX(\"ID_FINCA\")\n"
-                + " FROM public.\"FINCA\" ");
-        result2 = st2.executeQuery();
-        while (result2.next()) {
-            id = result2.getString("max");
-            idFinca += Integer.parseInt(id);
-            id = Integer.toString(idFinca);
-        }
+        ResultSet result2;        
         st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"FINCA\"(\"ID_FINCA\",\"NOMBRE\","
-                + "\"HECTAREAS\",\"DIRECCION\",\"NOMBRE_PROPIETARIO\",\"MUNICIPIO\",\"TIPO_TERRENO\") \n"
-                + "VALUES('" + id + "','" + finca.getNombre() + "'," + finca.getHectareas() + ","
-                + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getMunicipio() + "',"
-                + "'" + finca.getTipoTerreno() + "')");
+                + "\"HECTAREAS\",\"DIRECCION\",\"NOMBRE_PROPIETARIO\",\"MUNICIPIO\") \n"
+                + "VALUES(DEFAULT,'" + finca.getNombre() + "'," + finca.getHectareas() + ","
+                + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getMunicipio() + "' ");
         st.executeUpdate();
-
     }
 
     public void insertarVacuno(Vacuno vacuno) throws Exception {
@@ -132,7 +120,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("UPDATE public.\"FINCA\"\n"
                 + " SET \"NOMBRE\"='" + finca.getNombre() + "', \"HECTAREAS\"=" + finca.getHectareas() + ","
                 + " \"DIRECCION\"='" + finca.getDireccion() + "', \"NOMBRE_PROPIETARIO\"='" + finca.getNombrePropietario() + "', \n"
-                + " \"MUNICIPIO\"='" + finca.getMunicipio() + "',\"TIPO_TERRENO\"='" + finca.getTipoTerreno() + "'\n"
+                + " \"MUNICIPIO\"='" + finca.getMunicipio() + "' \n"
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
     }

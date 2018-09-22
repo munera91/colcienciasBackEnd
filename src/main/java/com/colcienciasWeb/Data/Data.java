@@ -24,7 +24,7 @@ public class Data {
     static {
         listaFincas = new ArrayList<Finca>() {
             {
-                add(new Finca("1","La fé", 55.5, "Cra87", "Leidy Jimenez", "1","Concavo, Rectilineo"));
+                add(new Finca(1,"La fé", 55.5, "Cra87", "Leidy Jimenez", "1"));
             }  
         };
     }

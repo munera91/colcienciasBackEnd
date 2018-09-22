@@ -80,7 +80,7 @@ public class FincaDaoImpl implements IFincaDao {
         try {
             listado = dao.getFincas();
             for (int i = 0; i < listado.size(); i++) {
-                if(listado.get(i).getID().equals(finca.getID())){
+                if(listado.get(i).getID() == finca.getID()){
                     dao.actualizarFinca(finca);
                     break;
                 }
