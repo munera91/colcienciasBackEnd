@@ -18,18 +18,20 @@ public class Finca {
     private Double hectareas;
     private String direccion;
     private String nombrePropietario;
-    private String municipio; 
+    private int idMunicipio;
+    private String descripcionMunicipio; 
 
     public Finca() {
     }
 
-    public Finca(int ID, String nombre, Double hectareas, String direccion, String nombrePropietario, String municipio) {
+    public Finca(int ID, String nombre, Double hectareas, String direccion, String nombrePropietario, int idMunicipio, String descripcionMunicipio) {
         this.ID = ID;
         this.nombre = nombre;
         this.hectareas = hectareas;
         this.direccion = direccion;
         this.nombrePropietario = nombrePropietario;
-        this.municipio = municipio;
+        this.idMunicipio = idMunicipio;
+        this.descripcionMunicipio = descripcionMunicipio;
     }
 
     public int getID() {
@@ -72,22 +74,26 @@ public class Finca {
         this.nombrePropietario = nombrePropietario;
     }
 
-    public String getMunicipio() {
-        return municipio;
+    public int getIdMunicipio() {
+        return idMunicipio;
     }
 
-    public void setMunicipio(String municipio) {
-        this.municipio = municipio;
+    public void setIdMunicipio(int idMunicipio) {
+        this.idMunicipio = idMunicipio;
     }
 
-    
+    public String getDescripcionMunicipio() {
+        return descripcionMunicipio;
+    }
 
-    
+    public void setDescripcionMunicipio(String descripcionMunicipio) {
+        this.descripcionMunicipio = descripcionMunicipio;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.ID);
+        int hash = 7;
+        hash = 67 * hash + this.ID;
         return hash;
     }
 
@@ -103,14 +109,13 @@ public class Finca {
             return false;
         }
         final Finca other = (Finca) obj;
-        if (!Objects.equals(this.ID, other.ID)) {
+        if (this.ID != other.ID) {
             return false;
         }
         return true;
     }
 
     
-
    
 
     

@@ -113,7 +113,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"FINCA\"(\"ID_FINCA\",\"NOMBRE\","
                 + "\"HECTAREAS\",\"DIRECCION\",\"NOMBRE_PROPIETARIO\",\"MUNICIPIO\") \n"
                 + "VALUES(DEFAULT,'" + finca.getNombre() + "'," + finca.getHectareas() + ","
-                + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getMunicipio() + "' ");
+                + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getIdMunicipio() + "' )");
         st.executeUpdate();
     }
 
@@ -143,7 +143,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("UPDATE public.\"FINCA\"\n"
                 + " SET \"NOMBRE\"='" + finca.getNombre() + "', \"HECTAREAS\"=" + finca.getHectareas() + ","
                 + " \"DIRECCION\"='" + finca.getDireccion() + "', \"NOMBRE_PROPIETARIO\"='" + finca.getNombrePropietario() + "', \n"
-                + " \"MUNICIPIO\"='" + finca.getMunicipio() + "' \n"
+                + " \"MUNICIPIO\"='" + finca.getIdMunicipio() + "' \n"
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
     }
