@@ -13,32 +13,30 @@ import java.util.Objects;
  */
 public class Finca {
     
-    private String ID;
+    private int ID;
     private String nombre;
     private Double hectareas;
     private String direccion;
     private String nombrePropietario;
     private String municipio; 
-    private String tipoTerreno;
 
     public Finca() {
     }
 
-    public Finca(String ID, String nombre, Double hectareas, String direccion, String nombrePropietario, String municipio, String tipoTerreno) {
+    public Finca(int ID, String nombre, Double hectareas, String direccion, String nombrePropietario, String municipio) {
         this.ID = ID;
         this.nombre = nombre;
         this.hectareas = hectareas;
         this.direccion = direccion;
         this.nombrePropietario = nombrePropietario;
         this.municipio = municipio;
-        this.tipoTerreno = tipoTerreno;
     }
 
-    public String getID() {
+    public int getID() {
         return ID;
     }
 
-    public void setID(String ID) {
+    public void setID(int ID) {
         this.ID = ID;
     }
 
@@ -82,13 +80,9 @@ public class Finca {
         this.municipio = municipio;
     }
 
-    public String getTipoTerreno() {
-        return tipoTerreno;
-    }
+    
 
-    public void setTipoTerreno(String tipoTerreno) {
-        this.tipoTerreno = tipoTerreno;
-    }
+    
 
     @Override
     public int hashCode() {
