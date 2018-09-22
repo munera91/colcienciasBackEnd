@@ -28,7 +28,7 @@ public class FincaDaoImpl implements IFincaDao {
     public List<Finca> obtenerFincas() {
         ArrayList<Finca> fincas = new ArrayList<>();
         try {
-            System.out.println("Entro DAO");
+            System.out.println("Entro DAO Fincas");
             fincas = dao.getFincas();
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -48,14 +48,12 @@ public class FincaDaoImpl implements IFincaDao {
 
     @Override
     public String crearFinca(Finca finca) {
-        String respuesta = "Finca ya existe";
         List<Finca> listado = obtenerFincas();
+        String respuesta = "";
         try {
-            if (!listado.contains(finca)) {
-                listado.add(finca);
-                dao.insertarFinca(finca);
-                respuesta = "Finca registrada";
-            }
+            listado.add(finca);
+            dao.insertarFinca(finca);
+            respuesta = "Finca registrada";
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -80,7 +78,7 @@ public class FincaDaoImpl implements IFincaDao {
         try {
             listado = dao.getFincas();
             for (int i = 0; i < listado.size(); i++) {
-                if(listado.get(i).getID() == finca.getID()){
+                if (listado.get(i).getID() == finca.getID()) {
                     dao.actualizarFinca(finca);
                     break;
                 }

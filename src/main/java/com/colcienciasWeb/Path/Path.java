@@ -18,4 +18,8 @@ public class Path {
         public static final String VACUNO = "/vacuno";
         public static final String VACUNO_ID = "/vacuno/{ID}";
     }
+    public class PathPredio{
+        public static final String PREDIO = "/predio";
+        public static final String PREDIO_ID = "/predio/{ID}";
+    }
 }

@@ -86,11 +86,11 @@ public class ColcienciasDao extends Conexion {
 
     public void insertarFinca(Finca finca) throws Exception {
         PreparedStatement st, st2;
-        ResultSet result2;        
+        ResultSet result2;
         st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"FINCA\"(\"ID_FINCA\",\"NOMBRE\","
                 + "\"HECTAREAS\",\"DIRECCION\",\"NOMBRE_PROPIETARIO\",\"MUNICIPIO\") \n"
                 + "VALUES(DEFAULT,'" + finca.getNombre() + "'," + finca.getHectareas() + ","
-                + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getMunicipio() + "' ");
+                + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getIdMunicipio() + "' )");
         st.executeUpdate();
     }
 
@@ -120,7 +120,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("UPDATE public.\"FINCA\"\n"
                 + " SET \"NOMBRE\"='" + finca.getNombre() + "', \"HECTAREAS\"=" + finca.getHectareas() + ","
                 + " \"DIRECCION\"='" + finca.getDireccion() + "', \"NOMBRE_PROPIETARIO\"='" + finca.getNombrePropietario() + "', \n"
-                + " \"MUNICIPIO\"='" + finca.getMunicipio() + "' \n"
+                + " \"MUNICIPIO\"='" + finca.getIdMunicipio() + "' \n"
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
     }
@@ -129,8 +129,8 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
 
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-                + "  SET \"RAZA\"='"+ vacuno.getRaza() +"', \"NUMERO_PARTOS\"="+ vacuno.getNumeroPartos() +","
-                        + " \"PESO\"="+ vacuno.getPeso() +", \"FINCA\"='"+ vacuno.getFinca() +"'\n"
+                + "  SET \"RAZA\"='" + vacuno.getRaza() + "', \"NUMERO_PARTOS\"=" + vacuno.getNumeroPartos() + ","
+                + " \"PESO\"=" + vacuno.getPeso() + ", \"FINCA\"='" + vacuno.getFinca() + "'\n"
                 + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
         st.executeUpdate();
     }
@@ -141,7 +141,7 @@ public class ColcienciasDao extends Conexion {
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
     }
-    
+
     public void eliminarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("DELETE FROM public.\"VACUNO\" "
