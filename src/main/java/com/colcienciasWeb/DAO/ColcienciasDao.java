@@ -32,6 +32,7 @@ public class ColcienciasDao extends Conexion {
         while (result.next()) {
             listaFincas.add(getFincaBYID(result.getString("ID_FINCA")));
         }
+        st.close();
         return listaFincas;
     }
 
@@ -45,6 +46,7 @@ public class ColcienciasDao extends Conexion {
         while (result.next()) {
             listavacunos.add(getVacunoBYID(result.getInt("ID_VACUNO")));
         }
+        st.close();
         return listavacunos;
     }
 
@@ -64,7 +66,7 @@ public class ColcienciasDao extends Conexion {
                     result2.getString("NOMBRE_PROPIETARIO"), result2.getInt("idMUNICIPIO"),
                     result2.getString("nombremunicipio"));
         }
-
+        st.close();
         return finca;
     }
 
@@ -86,7 +88,7 @@ public class ColcienciasDao extends Conexion {
                     result2.getDouble("PESO"), result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
                     result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
         }
-
+        st.close();
         return vacuno;
     }
 
@@ -111,38 +113,28 @@ public class ColcienciasDao extends Conexion {
                     result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
                     result2.getInt("IDFINCA"), result2.getString("FINCA"));
         }
+        st.close();
         return predio;
     }
 
     public void insertarFinca(Finca finca) throws Exception {
-        PreparedStatement st, st2;
-        ResultSet result2;
+        PreparedStatement st;
         st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"FINCA\"(\"ID_FINCA\",\"NOMBRE\","
                 + "\"HECTAREAS\",\"DIRECCION\",\"NOMBRE_PROPIETARIO\",\"MUNICIPIO\") \n"
                 + "VALUES(DEFAULT,'" + finca.getNombre() + "'," + finca.getHectareas() + ","
                 + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getIdMunicipio() + "' )");
         st.executeUpdate();
+        st.close();
     }
 
     public void insertarVacuno(Vacuno vacuno) throws Exception {
-        PreparedStatement st, st2;
-        ResultSet result2;
-        String id = "";
-        int idVacuno = 1;
-        st2 = this.getConexion().prepareStatement("SELECT MAX(\"ID_VACUNO\")\n"
-                + " FROM public.\"VACUNO\" ");
-        result2 = st2.executeQuery();
-        while (result2.next()) {
-            id = result2.getString("max");
-            idVacuno += Integer.parseInt(id);
-            id = Integer.toString(idVacuno);
-        }
+        PreparedStatement st;
         st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", \"PESO\","
                 + " \"PREDIO\", \"CATEGORIA\")\n"
                 + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getPeso() + "," + vacuno.getIdPredio() + ","
                 + " " + vacuno.getIdCategoria() + ")");
         st.executeUpdate();
-
+        st.close();
     }
 
     public void actualizarFinca(Finca finca) throws Exception {
@@ -153,16 +145,17 @@ public class ColcienciasDao extends Conexion {
                 + " \"MUNICIPIO\"='" + finca.getIdMunicipio() + "' \n"
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
+        st.close();
     }
 
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
-
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
                 + "SET \"PESO\"=" + vacuno.getPeso() + ", \"PREDIO\"=" + vacuno.getIdPredio() + ","
                 + " \"CATEGORIA\"=" + vacuno.getIdCategoria() + "\n"
                 + " WHERE \"ID_VACUNO\" =  '" + vacuno.getID() + "'");
         st.executeUpdate();
+        st.close();
     }
 
     public void eliminarFinca(Finca finca) throws Exception {
@@ -170,6 +163,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("DELETE FROM public.\"FINCA\" "
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
+        st.close();
     }
 
     public void eliminarVacuno(Vacuno vacuno) throws Exception {
@@ -177,6 +171,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("DELETE FROM public.\"VACUNO\" "
                 + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
         st.executeUpdate();
+        st.close();
     }
 
     public void insertarPredio(Predio predio) throws Exception {
