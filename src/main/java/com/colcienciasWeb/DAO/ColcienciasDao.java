@@ -32,7 +32,7 @@ public class ColcienciasDao extends Conexion {
         while (result.next()) {
             listaFincas.add(getFincaBYID(result.getString("ID_FINCA")));
         }
-        this.getConexion().close();
+        st.close();
         return listaFincas;
     }
 
@@ -46,7 +46,7 @@ public class ColcienciasDao extends Conexion {
         while (result.next()) {
             listavacunos.add(getVacunoBYID(result.getInt("ID_VACUNO")));
         }
-        this.getConexion().close();
+        st.close();
         return listavacunos;
     }
 
@@ -66,7 +66,7 @@ public class ColcienciasDao extends Conexion {
                     result2.getString("NOMBRE_PROPIETARIO"), result2.getInt("idMUNICIPIO"),
                     result2.getString("nombremunicipio"));
         }
-        this.getConexion().close();
+        st.close();
         return finca;
     }
 
@@ -88,7 +88,7 @@ public class ColcienciasDao extends Conexion {
                     result2.getDouble("PESO"), result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
                     result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
         }
-        this.getConexion().close();
+        st.close();
         return vacuno;
     }
 
@@ -113,7 +113,7 @@ public class ColcienciasDao extends Conexion {
                     result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
                     result2.getInt("IDFINCA"), result2.getString("FINCA"));
         }
-        this.getConexion().close();
+        st.close();
         return predio;
     }
 
@@ -124,7 +124,7 @@ public class ColcienciasDao extends Conexion {
                 + "VALUES(DEFAULT,'" + finca.getNombre() + "'," + finca.getHectareas() + ","
                 + "'" + finca.getDireccion() + "','" + finca.getNombrePropietario() + "','" + finca.getIdMunicipio() + "' )");
         st.executeUpdate();
-        this.getConexion().close();
+        st.close();
     }
 
     public void insertarVacuno(Vacuno vacuno) throws Exception {
@@ -134,7 +134,7 @@ public class ColcienciasDao extends Conexion {
                 + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getPeso() + "," + vacuno.getIdPredio() + ","
                 + " " + vacuno.getIdCategoria() + ")");
         st.executeUpdate();
-        this.getConexion().close();
+        st.close();
     }
 
     public void actualizarFinca(Finca finca) throws Exception {
@@ -145,18 +145,17 @@ public class ColcienciasDao extends Conexion {
                 + " \"MUNICIPIO\"='" + finca.getIdMunicipio() + "' \n"
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
-        this.getConexion().close();
+        st.close();
     }
 
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
-
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
                 + "SET \"PESO\"="+ vacuno.getPeso() +", \"PREDIO\"="+ vacuno.getIdPredio() +","
                 + " \"CATEGORIA\"="+ vacuno.getIdCategoria() +"\n"
                 + " WHERE \"ID_VACUNO\" =  '" + vacuno.getID() + "'");
         st.executeUpdate();
-        this.getConexion().close();
+        st.close();
     }
 
     public void eliminarFinca(Finca finca) throws Exception {
@@ -164,7 +163,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("DELETE FROM public.\"FINCA\" "
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
-        this.getConexion().close();
+        st.close();
     }
 
     public void eliminarVacuno(Vacuno vacuno) throws Exception {
@@ -172,7 +171,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("DELETE FROM public.\"VACUNO\" "
                 + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
         st.executeUpdate();
-        this.getConexion().close();
+        st.close();
     }
 
 }
