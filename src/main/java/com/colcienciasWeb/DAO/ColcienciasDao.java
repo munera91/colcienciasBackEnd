@@ -159,8 +159,8 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
 
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-                + "SET \"PESO\"="+ vacuno.getPeso() +", \"PREDIO\"="+ vacuno.getIdPredio() +","
-                + " \"CATEGORIA\"="+ vacuno.getIdCategoria() +"\n"
+                + "SET \"PESO\"=" + vacuno.getPeso() + ", \"PREDIO\"=" + vacuno.getIdPredio() + ","
+                + " \"CATEGORIA\"=" + vacuno.getIdCategoria() + "\n"
                 + " WHERE \"ID_VACUNO\" =  '" + vacuno.getID() + "'");
         st.executeUpdate();
     }
@@ -176,6 +176,34 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("DELETE FROM public.\"VACUNO\" "
                 + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
+        st.executeUpdate();
+    }
+
+    public void insertarPredio(Predio predio) throws Exception {
+        PreparedStatement st;
+
+        st = this.getConexion().prepareStatement("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
+                + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\")\n"
+                + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
+                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + "");
+        st.executeUpdate();
+
+    }
+
+    public void actualizarPredio(Predio predio) throws Exception {
+        PreparedStatement st;
+
+        st = this.getConexion().prepareStatement("UPDATE public.\"PREDIO\"\n"
+                + "\"DESCRIPCION\"='"+ predio.getDescripcion() +"', \"TIPO_ALIMENTACION\"="+ predio.getIdTipoAlimentacion() +","
+                + " \"TIPO_TERRENO\"="+ predio.getIdTipoTerreno() +"\n"
+                + " WHERE \"ID_PREDIO\" =  '" + predio.getID() + "'");
+        st.executeUpdate();
+    }
+    
+    public void eliminarPredio(Predio predio) throws Exception {
+        PreparedStatement st;
+        st = this.getConexion().prepareStatement("DELETE FROM public.\"PREDIO\" "
+                + "WHERE \"ID_PREDIO\" = '" + predio.getID() + "'");
         st.executeUpdate();
     }
 
