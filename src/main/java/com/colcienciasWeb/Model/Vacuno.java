@@ -13,13 +13,13 @@ import java.util.Objects;
  */
 public class Vacuno {
     
-    private String ID;
+    private int ID;
     private String raza;
-    private Integer numeroPartos;
     private Double peso;
-    private String finca;
+    private int predio;
+    private int categoria;
 
-    public Vacuno(String ID, String raza, Integer numeroPartos, Double peso, String finca) {
+    public Vacuno(int ID, String raza, Integer numeroPartos, Double peso, String finca) {
         this.ID = ID;
         this.raza = raza;
         this.numeroPartos = numeroPartos;
@@ -30,11 +30,11 @@ public class Vacuno {
     public Vacuno() {
     }
 
-    public String getID() {
+    public int getID() {
         return ID;
     }
 
-    public void setID(String ID) {
+    public void setID(int ID) {
         this.ID = ID;
     }
 

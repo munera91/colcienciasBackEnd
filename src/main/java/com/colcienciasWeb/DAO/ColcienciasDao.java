@@ -38,11 +38,11 @@ public class ColcienciasDao extends Conexion {
         ArrayList<Vacuno> listavacunos = new ArrayList();
         PreparedStatement st;
         ResultSet result;
-        st = this.getConexion().prepareCall("SELECT \"ID_VACUNO\", \"RAZA\", \"NUMERO_PARTOS\", \"PESO\", \"FINCA\"\n"
-                + " FROM public.\"VACUNO\"");
+        st = this.getConexion().prepareCall("SELECT \"ID_VACUNO\", \"RAZA\", \"PESO\", \"PREDIO\", \"CATEGORIA\"\n"
+                + "FROM public.\"VACUNO\"");
         result = st.executeQuery();
         while (result.next()) {
-            listavacunos.add(getVacunoBYID(result.getString("ID_VACUNO")));
+            listavacunos.add(getVacunoBYID(result.getInt("ID_VACUNO")));
         }
         return listavacunos;
     }
@@ -66,7 +66,7 @@ public class ColcienciasDao extends Conexion {
         return finca;
     }
 
-    public Vacuno getVacunoBYID(String idVacuno) throws Exception {
+    public Vacuno getVacunoBYID(int idVacuno) throws Exception {
         Vacuno vacuno = null;
         PreparedStatement st;
         ResultSet result2;
@@ -141,8 +141,8 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
 
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-                + "  SET \"RAZA\"='"+ vacuno.getRaza() +"', \"NUMERO_PARTOS\"="+ vacuno.getNumeroPartos() +","
-                        + " \"PESO\"="+ vacuno.getPeso() +", \"FINCA\"='"+ vacuno.getFinca() +"'\n"
+                + "  SET \"RAZA\"='" + vacuno.getRaza() + "', \"NUMERO_PARTOS\"=" + vacuno.getNumeroPartos() + ","
+                + " \"PESO\"=" + vacuno.getPeso() + ", \"FINCA\"='" + vacuno.getFinca() + "'\n"
                 + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
         st.executeUpdate();
     }
@@ -153,7 +153,7 @@ public class ColcienciasDao extends Conexion {
                 + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
         st.executeUpdate();
     }
-    
+
     public void eliminarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("DELETE FROM public.\"VACUNO\" "
