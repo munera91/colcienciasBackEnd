@@ -98,7 +98,7 @@ public class ColcienciasDao extends Conexion {
                 + "INNER JOIN public.\"CATEGORIA_VACUNO\" C ON (C.\"ID_CATEGORIA\" = V.\"CATEGORIA\")\n"
                 + "WHERE V.\"ID_VACUNO\" = " + idVacuno + "");
         result2 = st.executeQuery();
-        if (result2.first()) {
+        while(result2.next()) {
             vacuno = new Vacuno(result2.getInt("ID_VACUNO"), result2.getString("RAZA"),
                     result2.getDouble("PESO"), result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
                     result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
@@ -122,7 +122,7 @@ public class ColcienciasDao extends Conexion {
                 + "WHERE P.\"ID_PREDIO\" = " + idPredio + "");
 
         result2 = st.executeQuery();
-        if (result2.first()) {
+        while(result2.next()) {
             predio = new Predio(result2.getInt("ID_PREDIO"), result2.getString("DESCRIPCION"),
                     result2.getInt("IDALIMENTO"), result2.getString("ALIMENTO"),
                     result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
