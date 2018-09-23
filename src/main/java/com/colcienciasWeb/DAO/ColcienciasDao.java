@@ -50,13 +50,13 @@ public class ColcienciasDao extends Conexion {
         return listavacunos;
     }
 
-    public ArrayList<Predio> getPredios(int idFinca) throws SQLException, Exception {
+    public ArrayList<Predio> getPredios(String idFinca) throws SQLException, Exception {
         ArrayList<Predio> listavacunos = new ArrayList();
         PreparedStatement st;
         ResultSet result;
         st = this.getConexion().prepareCall("SELECT \"ID_PREDIO\", \"DESCRIPCION\", \"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\"\n"
                 + "FROM public.\"PREDIO\"\n"
-                + "WHERE \"FINCA\" = "+idFinca+"");
+                + "WHERE \"FINCA\" = '" + idFinca + "' ");
         result = st.executeQuery();
         while (result.next()) {
             listavacunos.add(getPredioBYID(result.getInt("ID_PREDIO")));
@@ -197,7 +197,7 @@ public class ColcienciasDao extends Conexion {
                 + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
                 + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + "");
         st.executeUpdate();
-
+        st.close();
     }
 
     public void actualizarPredio(Predio predio) throws Exception {
@@ -208,6 +208,7 @@ public class ColcienciasDao extends Conexion {
                 + " \"TIPO_TERRENO\"=" + predio.getIdTipoTerreno() + "\n"
                 + " WHERE \"ID_PREDIO\" =  '" + predio.getID() + "'");
         st.executeUpdate();
+        st.close();
     }
 
     public void eliminarPredio(Predio predio) throws Exception {
@@ -215,6 +216,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("DELETE FROM public.\"PREDIO\" "
                 + "WHERE \"ID_PREDIO\" = '" + predio.getID() + "'");
         st.executeUpdate();
+        st.close();
     }
 
 }

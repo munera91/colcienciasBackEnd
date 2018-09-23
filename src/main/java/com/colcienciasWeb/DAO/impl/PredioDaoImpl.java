@@ -25,11 +25,11 @@ public class PredioDaoImpl implements IPredioDao {
     ColcienciasDao dao = new ColcienciasDao();
 
     @Override
-    public List<Predio> obtenerPredios() {
+    public List<Predio> obtenerPredios(String idFinca) {
         ArrayList<Predio> predios = new ArrayList<>();
         try {
             System.out.println("Entro DAO");
-            //predios = dao.getPredios();
+            predios = dao.getPredios(idFinca);
         } catch (Exception ex) {
             Logger.getLogger(PredioDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,13 +51,11 @@ public class PredioDaoImpl implements IPredioDao {
         String respuesta = "Predio ya existe";
         List<Predio> listado;
         try {
-            //listado = dao.getPredios();
+            listado = dao.getPredios(Integer.toString(predio.getIdFinca()));
+            listado.add(predio);
+            dao.insertarPredio(predio);
+            respuesta = "Predio registrado";
 
-//            if (!listado.contains(predio)) {
-//                listado.add(predio);
-//                dao.insertarPredio(predio);
-//                respuesta = "Predio registrado";
-//            }
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,7 +66,7 @@ public class PredioDaoImpl implements IPredioDao {
     public String eliminarPredio(Predio predio) {
         String respuesta = "Predio eliminado";
         try {
-           // dao.eliminarPredio(predio);
+            dao.eliminarPredio(predio);
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -80,13 +78,13 @@ public class PredioDaoImpl implements IPredioDao {
         String respuesta = "Predio actualizado";
         List<Predio> listado;
         try {
-//            listado = dao.getPredios();
-//            for (int i = 0; i < listado.size(); i++) {
-//                if (listado.get(i).getID().equals(predio.getID())) {
-//                    dao.actualizarPredio(predio);
-//                    break;
-//                }
-//            }
+            listado = dao.getPredios(Integer.toString(predio.getIdFinca()));
+            for (int i = 0; i < listado.size(); i++) {
+                if (listado.get(i).getID() == predio.getID()) {
+                    dao.actualizarPredio(predio);
+                    break;
+                }
+            }
         } catch (Exception ex) {
             Logger.getLogger(PredioDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

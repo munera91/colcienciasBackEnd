@@ -34,8 +34,8 @@ public class PredioController {
     private IPredioBusiness predioBusiness;
 
     @GetMapping(PathPredio.PREDIO)
-    public List<Predio> obtenerPredios(HttpServletResponse hsr) {
-        return predioBusiness.obtenerPredios();
+    public List<Predio> obtenerPredios(@PathVariable String idFinca,HttpServletResponse hsr) {
+        return predioBusiness.obtenerPredios(idFinca);
     }
     
     @GetMapping(PathPredio.PREDIO_ID)

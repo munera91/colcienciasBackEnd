@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface IPredioBusiness {
     
-    List<Predio> obtenerPredios();
+    List<Predio> obtenerPredios(String idPredio);
     Predio obtenerPredio(String id);
     String crearPredio(Predio predio);
     String eliminarPredio(Predio predio);

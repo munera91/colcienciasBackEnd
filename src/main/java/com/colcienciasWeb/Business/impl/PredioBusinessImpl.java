@@ -46,8 +46,8 @@ public class PredioBusinessImpl implements IPredioBusiness{
     }
 
     @Override
-    public List<Predio> obtenerPredios() {
-        return predioDao.obtenerPredios();
+    public List<Predio> obtenerPredios(String idFinca) {
+        return predioDao.obtenerPredios(idFinca);
     }
     
 }
