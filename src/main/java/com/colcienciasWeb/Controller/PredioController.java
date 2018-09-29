@@ -57,9 +57,9 @@ public class PredioController {
         return predioBusiness.modificarPredio(predio);
     }
 
-    @DeleteMapping(PathPredio.PREDIO)
-    public String eliminarPredio(@RequestBody Predio predio,
+    @DeleteMapping(PathPredio.PREDIO_ID)
+    public String eliminarPredio(@PathVariable String idPredio,
             HttpServletResponse hsr) {
-        return predioBusiness.eliminarPredio(predio);
+        return predioBusiness.eliminarPredio(idPredio);
     }
 }
