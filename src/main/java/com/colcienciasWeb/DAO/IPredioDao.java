@@ -17,7 +17,7 @@ public interface IPredioDao {
     List<Predio> obtenerPredios(String idFinca);
     Predio obtenerPredio(String id);
     String crearPredio(Predio predio);
-    String eliminarPredio(Predio predio);
+    String eliminarPredio(String idPredio);
     String modificarPredio(Predio predio);
     
 }

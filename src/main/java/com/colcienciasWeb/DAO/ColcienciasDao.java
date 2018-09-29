@@ -119,7 +119,7 @@ public class ColcienciasDao extends Conexion {
         result2 = st.executeQuery();
         while (result2.next()) {
             vacuno = new Vacuno(result2.getInt("ID_VACUNO"), result2.getString("RAZA"),
-                    result2.getDouble("PESO"), result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
+                    result2.getDouble("PESO"), true,result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
                     result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
         }
         st.close();
@@ -206,10 +206,6 @@ public class ColcienciasDao extends Conexion {
 
     public void insertarPredio(Predio predio) throws Exception {
         PreparedStatement st;
-        System.out.println("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
-                + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\")\n"
-                + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
-                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + " )");
         st = this.getConexion().prepareStatement("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
                 + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\")\n"
                 + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
@@ -220,8 +216,11 @@ public class ColcienciasDao extends Conexion {
 
     public void actualizarPredio(Predio predio) throws Exception {
         PreparedStatement st;
-
-        st = this.getConexion().prepareStatement("UPDATE public.\"PREDIO\"\n"
+        System.out.println("UPDATE public.\"PREDIO\"\n"
+                + "\"DESCRIPCION\"='" + predio.getDescripcion() + "', \"TIPO_ALIMENTACION\"=" + predio.getIdTipoAlimentacion() + ","
+                + " \"TIPO_TERRENO\"=" + predio.getIdTipoTerreno() + "\n"
+                + " WHERE \"ID_PREDIO\" =  '" + predio.getID() + "'");
+        st = this.getConexion().prepareStatement("UPDATE public.\"PREDIO\" SET \n"
                 + "\"DESCRIPCION\"='" + predio.getDescripcion() + "', \"TIPO_ALIMENTACION\"=" + predio.getIdTipoAlimentacion() + ","
                 + " \"TIPO_TERRENO\"=" + predio.getIdTipoTerreno() + "\n"
                 + " WHERE \"ID_PREDIO\" =  '" + predio.getID() + "'");
@@ -229,10 +228,10 @@ public class ColcienciasDao extends Conexion {
         st.close();
     }
 
-    public void eliminarPredio(Predio predio) throws Exception {
+    public void eliminarPredio(String idPredio) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("DELETE FROM public.\"PREDIO\" "
-                + "WHERE \"ID_PREDIO\" = '" + predio.getID() + "'");
+                + "WHERE \"ID_PREDIO\" = '" + idPredio + "'");
         st.executeUpdate();
         st.close();
     }

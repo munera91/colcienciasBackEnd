@@ -16,15 +16,17 @@ public class Vacuno {
     private int ID;
     private String raza;
     private Double peso;
+    private Boolean actualizarPeso;
     private int idPredio;
     private String descripcionPredio;
     private int idCategoria;
     private String descripcionCategoria;
 
-    public Vacuno(int ID, String raza, Double peso, int idPredio, String descripcionPredio, int idCategoria, String descripcionCategoria) {
+    public Vacuno(int ID, String raza, Double peso, Boolean actualizarPeso, int idPredio, String descripcionPredio, int idCategoria, String descripcionCategoria) {
         this.ID = ID;
         this.raza = raza;
         this.peso = peso;
+        this.actualizarPeso = actualizarPeso;
         this.idPredio = idPredio;
         this.descripcionPredio = descripcionPredio;
         this.idCategoria = idCategoria;
@@ -33,7 +35,7 @@ public class Vacuno {
 
     public Vacuno() {
     }
-    
+
     public int getID() {
         return ID;
     }
@@ -56,6 +58,14 @@ public class Vacuno {
 
     public void setPeso(Double peso) {
         this.peso = peso;
+    }
+
+    public Boolean getActualizarPeso() {
+        return actualizarPeso;
+    }
+
+    public void setActualizarPeso(Boolean actualizarPeso) {
+        this.actualizarPeso = actualizarPeso;
     }
 
     public int getIdPredio() {
@@ -93,7 +103,7 @@ public class Vacuno {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 53 * hash + this.ID;
+        hash = 67 * hash + this.ID;
         return hash;
     }
 
@@ -115,7 +125,7 @@ public class Vacuno {
         return true;
     }
 
-   
+    
     
     
 }

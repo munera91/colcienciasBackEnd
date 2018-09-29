@@ -18,7 +18,7 @@ public interface IPredioBusiness {
     List<Predio> obtenerPredios(String idPredio);
     Predio obtenerPredio(String id);
     String crearPredio(Predio predio);
-    String eliminarPredio(Predio predio);
+    String eliminarPredio(String idPredio);
     String modificarPredio(Predio predio);
           
 }

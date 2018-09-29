@@ -36,8 +36,8 @@ public class PredioBusinessImpl implements IPredioBusiness{
     }
 
     @Override
-    public String eliminarPredio(Predio predio) {
-        return predioDao.eliminarPredio(predio);
+    public String eliminarPredio(String idPredio) {
+        return predioDao.eliminarPredio(idPredio);
     }
 
     @Override
