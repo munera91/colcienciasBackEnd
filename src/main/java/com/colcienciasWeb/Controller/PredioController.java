@@ -5,7 +5,6 @@
  */
 package com.colcienciasWeb.Controller;
 
-
 import com.colcienciasWeb.Business.IPredioBusiness;
 import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Path.Path.PathPredio;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /**
  *
  * @author sala305
@@ -33,32 +31,35 @@ public class PredioController {
     @Autowired
     private IPredioBusiness predioBusiness;
 
-    @GetMapping(PathPredio.PREDIO)
-    public List<Predio> obtenerPredios(@PathVariable String idFinca,HttpServletResponse hsr) {
+    @GetMapping(PathPredio.PREDIOS)
+    public List<Predio> obtenerPredios(@PathVariable String idFinca, HttpServletResponse hsr) {
         return predioBusiness.obtenerPredios(idFinca);
     }
-    
+
     @GetMapping(PathPredio.PREDIO_ID)
-    public Predio obtenerPredio (@PathVariable String id, 
-            HttpServletResponse hsr){
-        return predioBusiness.obtenerPredio(id);
+    public Predio obtenerPredio(@PathVariable String idPredio,
+            HttpServletResponse hsr) {
+        if (Integer.parseInt(idPredio) > 0) {
+            return predioBusiness.obtenerPredio(idPredio);
+        }
+        return null;
     }
-    
+
     @PostMapping(PathPredio.PREDIO)
-    public String crearPredio (@RequestBody Predio predio,
-            HttpServletResponse hsr){
+    public String crearPredio(@RequestBody Predio predio,
+            HttpServletResponse hsr) {
         return predioBusiness.crearPredio(predio);
     }
-    
+
     @PutMapping(PathPredio.PREDIO)
     public String modificarPredio(@RequestBody Predio predio,
-            HttpServletResponse hsr){
+            HttpServletResponse hsr) {
         return predioBusiness.modificarPredio(predio);
     }
-    
+
     @DeleteMapping(PathPredio.PREDIO)
     public String eliminarPredio(@RequestBody Predio predio,
-            HttpServletResponse hsr){
+            HttpServletResponse hsr) {
         return predioBusiness.eliminarPredio(predio);
     }
 }

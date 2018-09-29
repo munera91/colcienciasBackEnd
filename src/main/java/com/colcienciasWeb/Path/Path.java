@@ -20,6 +20,11 @@ public class Path {
     }
     public class PathPredio{
         public static final String PREDIO = "/predio";
-        public static final String PREDIO_ID = "/predio/{ID}";
+        public static final String PREDIO_ID = "/predio/{idPredio}";
+        public static final String PREDIOS = "/predios/{idFinca}";
+    }
+    
+    public class PathMunicipio{
+        public static final String MUNICIPIOS =  "/municipios/{idDepartamento}";
     }
 }

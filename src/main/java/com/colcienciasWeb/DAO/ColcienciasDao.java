@@ -6,6 +6,7 @@
 package com.colcienciasWeb.DAO;
 
 import com.colcienciasWeb.Model.Finca;
+import com.colcienciasWeb.Model.Municipio;
 import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.utilities.Conexion;
@@ -51,7 +52,7 @@ public class ColcienciasDao extends Conexion {
     }
 
     public ArrayList<Predio> getPredios(String idFinca) throws SQLException, Exception {
-        ArrayList<Predio> listavacunos = new ArrayList();
+        ArrayList<Predio> listaPredios = new ArrayList();
         PreparedStatement st;
         ResultSet result;
         st = this.getConexion().prepareCall("SELECT \"ID_PREDIO\", \"DESCRIPCION\", \"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\"\n"
@@ -59,10 +60,24 @@ public class ColcienciasDao extends Conexion {
                 + "WHERE \"FINCA\" = '" + idFinca + "' ");
         result = st.executeQuery();
         while (result.next()) {
-            listavacunos.add(getPredioBYID(result.getInt("ID_PREDIO")));
+            listaPredios.add(getPredioBYID(result.getInt("ID_PREDIO")));
         }
         st.close();
-        return listavacunos;
+        return listaPredios;
+    }
+
+    public ArrayList<Municipio> getMunicipios(String idDepartamento) throws SQLException, Exception {
+        ArrayList<Municipio> listaMunicipios = new ArrayList();
+        PreparedStatement st;
+        ResultSet result;
+        st = this.getConexion().prepareCall("SELECT \"idMUNICIPIO\", nombre FROM public.\"MUNICIPIO\" "
+                + "WHERE \"idDepartamento\" = '" + idDepartamento + "'");
+        result = st.executeQuery();
+        while (result.next()) {
+            listaMunicipios.add(new Municipio(result.getString("idMunicipio"), result.getString("nombre")));
+        }
+        st.close();
+        return listaMunicipios;
     }
 
     public Finca getFincaBYID(String idFinca) throws Exception {
@@ -98,7 +113,7 @@ public class ColcienciasDao extends Conexion {
                 + "INNER JOIN public.\"CATEGORIA_VACUNO\" C ON (C.\"ID_CATEGORIA\" = V.\"CATEGORIA\")\n"
                 + "WHERE V.\"ID_VACUNO\" = " + idVacuno + "");
         result2 = st.executeQuery();
-        while(result2.next()) {
+        while (result2.next()) {
             vacuno = new Vacuno(result2.getInt("ID_VACUNO"), result2.getString("RAZA"),
                     result2.getDouble("PESO"), result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
                     result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
@@ -111,18 +126,14 @@ public class ColcienciasDao extends Conexion {
         Predio predio = null;
         PreparedStatement st;
         ResultSet result2;
-
-        st = this.getConexion().prepareCall("SELECT P.\"ID_PREDIO\", P.\"DESCRIPCION\", A.\"ID_TIPO_ALIMENTACION\" AS IDALIMENTO ,A.\"DESCRIPCION\" AS ALIMENTO,"
-                + "T.\"ID_TIPO_TERRENO\" AS IDTERRENO ,T.\"DESCRIPCION\" AS TERRENO,F.\"NOMBRE\"\n"
-                + "F.\"ID_FINCA\" AS IDFINCA ,F.\"NOMBRE\" AS FINCA"
-                + "FROM public.\"PREDIO\" P\n"
+        st = this.getConexion().prepareCall("SELECT P.\"ID_PREDIO\", P.\"DESCRIPCION\", A.\"ID_TIPO_ALIMENTACION\" AS IDALIMENTO ,A.\"DESCRIPCION\" AS ALIMENTO,T.\"ID_TIPO_TERRENO\" AS IDTERRENO ,T.\"DESCRIPCION\" AS TERRENO,F.\"NOMBRE\",\n"
+                + "F.\"ID_FINCA\" AS IDFINCA ,F.\"NOMBRE\" AS FINCA FROM public.\"PREDIO\" P\n"
                 + "INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = P.\"TIPO_ALIMENTACION\")\n"
                 + "INNER JOIN public.\"TIPO_TERRENO\" T ON (T.\"ID_TIPO_TERRENO\" = P.\"TIPO_TERRENO\")\n"
-                + "INNER JOIN puclic.\"FINCA\" F ON (F.\"ID_FINCA\" = P.\"FINCA\")\n"
+                + "INNER JOIN public.\"FINCA\" F ON (F.\"ID_FINCA\" = P.\"FINCA\")\n"
                 + "WHERE P.\"ID_PREDIO\" = " + idPredio + "");
-
         result2 = st.executeQuery();
-        while(result2.next()) {
+        while (result2.next()) {
             predio = new Predio(result2.getInt("ID_PREDIO"), result2.getString("DESCRIPCION"),
                     result2.getInt("IDALIMENTO"), result2.getString("ALIMENTO"),
                     result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
@@ -191,11 +202,14 @@ public class ColcienciasDao extends Conexion {
 
     public void insertarPredio(Predio predio) throws Exception {
         PreparedStatement st;
-
+        System.out.println("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
+                + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\")\n"
+                + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
+                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + " )");
         st = this.getConexion().prepareStatement("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
                 + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\")\n"
                 + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
-                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + "");
+                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + " )");
         st.executeUpdate();
         st.close();
     }

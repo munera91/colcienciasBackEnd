@@ -28,7 +28,7 @@ public class PredioDaoImpl implements IPredioDao {
     public List<Predio> obtenerPredios(String idFinca) {
         ArrayList<Predio> predios = new ArrayList<>();
         try {
-            System.out.println("Entro DAO");
+            System.out.println("Entro DAO Predios");
             predios = dao.getPredios(idFinca);
         } catch (Exception ex) {
             Logger.getLogger(PredioDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -39,9 +39,13 @@ public class PredioDaoImpl implements IPredioDao {
     @Override
     public Predio obtenerPredio(String id) {
         Predio predio = new Predio();
-        List<Predio> listado = Data.getListaPredios();
-        for (Predio vac : listado) {
-            predio = vac;
+        try {
+            ArrayList<Predio> predios = dao.getPredios(id);
+            for (Predio pr : predios) {
+                predio = pr;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(PredioDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return predio;
     }

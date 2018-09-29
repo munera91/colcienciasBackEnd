@@ -6,6 +6,7 @@
 package com.colcienciasWeb.Data;
 
 import com.colcienciasWeb.Model.Finca;
+import com.colcienciasWeb.Model.Municipio;
 import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Model.Vacuno;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class Data {
     private static ArrayList<Finca> listaFincas;
     private static ArrayList<Vacuno> listaVacunos;
     private static ArrayList<Predio> listaPredios;
+    private static ArrayList<Municipio> listaMunicipios;
     
     
     public static List<Finca> getListaFinca(){
@@ -47,6 +49,15 @@ public class Data {
     public static void setListaPredios(ArrayList<Predio> listaPredios) {
         Data.listaPredios = listaPredios;
     }
+
+    public static ArrayList<Municipio> getListaMunicipios() {
+        return listaMunicipios;
+    }
+
+    public static void setListaMunicipios(ArrayList<Municipio> listaMunicipios) {
+        Data.listaMunicipios = listaMunicipios;
+    }
+    
     
     
     

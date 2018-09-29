@@ -48,11 +48,11 @@ public class VacunoDaoImpl implements IVacunoDao {
 
     @Override
     public String crearVacuno(Vacuno vacuno) {
-        String respuesta = "Vacuno ya existe";
+        String respuesta = "";
         List<Vacuno> listado;
         try {
-            listado = dao.getVacunos();
-            
+            listado = dao.getVacunos();   
+            vacuno.setIdCategoria(getCategoriaByPesoVacuno(vacuno.getPeso()));
             listado.add(vacuno);
             dao.insertarVacuno(vacuno);
             respuesta = "Vacuno registrado";
@@ -65,7 +65,15 @@ public class VacunoDaoImpl implements IVacunoDao {
     
     public int getCategoriaByPesoVacuno(Double peso){
         int categoriaVacuno = 0;
-        
+        if(peso <= 180.0){
+           categoriaVacuno = 1;  
+        }else if(peso <= 250.0){
+           categoriaVacuno = 2; 
+        }else if(peso <= 350.0){
+           categoriaVacuno = 3; 
+        }else{
+           categoriaVacuno = 4;  
+        }
         return categoriaVacuno;
     }
 
@@ -84,6 +92,7 @@ public class VacunoDaoImpl implements IVacunoDao {
     public String modificarVacuno(Vacuno vacuno) {
         String respuesta = "Vacuno actualizado";
         List<Vacuno> listado;
+        vacuno.setIdCategoria(getCategoriaByPesoVacuno(vacuno.getPeso()));
         try {
             listado = dao.getVacunos();
             for (int i = 0; i < listado.size(); i++) {

@@ -17,25 +17,23 @@ public class Vacuno {
     private String raza;
     private Double peso;
     private int idPredio;
-    private String descipcionPredio;
-    private int idCategoria;
     private String descripcionPredio;
+    private int idCategoria;
+    private String descripcionCategoria;
 
-    public Vacuno(int ID, String raza, Double peso, int idPredio, String descipcionPredio, int idCategoria, String descripcionPredio) {
+    public Vacuno(int ID, String raza, Double peso, int idPredio, String descripcionPredio, int idCategoria, String descripcionCategoria) {
         this.ID = ID;
         this.raza = raza;
         this.peso = peso;
         this.idPredio = idPredio;
-        this.descipcionPredio = descipcionPredio;
-        this.idCategoria = idCategoria;
         this.descripcionPredio = descripcionPredio;
+        this.idCategoria = idCategoria;
+        this.descripcionCategoria = descripcionCategoria;
     }
-
-    
 
     public Vacuno() {
     }
-
+    
     public int getID() {
         return ID;
     }
@@ -68,12 +66,12 @@ public class Vacuno {
         this.idPredio = idPredio;
     }
 
-    public String getDescipcionPredio() {
-        return descipcionPredio;
+    public String getDescripcionPredio() {
+        return descripcionPredio;
     }
 
-    public void setDescipcionPredio(String descipcionPredio) {
-        this.descipcionPredio = descipcionPredio;
+    public void setDescripcionPredio(String descripcionPredio) {
+        this.descripcionPredio = descripcionPredio;
     }
 
     public int getIdCategoria() {
@@ -84,20 +82,18 @@ public class Vacuno {
         this.idCategoria = idCategoria;
     }
 
-    public String getDescripcionPredio() {
-        return descripcionPredio;
+    public String getDescripcionCategoria() {
+        return descripcionCategoria;
     }
 
-    public void setDescripcionPredio(String descripcionPredio) {
-        this.descripcionPredio = descripcionPredio;
+    public void setDescripcionCategoria(String descripcionCategoria) {
+        this.descripcionCategoria = descripcionCategoria;
     }
-
-   
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.ID);
+        hash = 53 * hash + this.ID;
         return hash;
     }
 
@@ -113,13 +109,13 @@ public class Vacuno {
             return false;
         }
         final Vacuno other = (Vacuno) obj;
-        if (!Objects.equals(this.ID, other.ID)) {
+        if (this.ID != other.ID) {
             return false;
         }
         return true;
     }
 
-    
+   
     
     
 }
