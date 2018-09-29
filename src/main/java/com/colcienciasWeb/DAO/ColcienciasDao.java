@@ -115,15 +115,33 @@ public class ColcienciasDao extends Conexion {
                 + "FROM public.\"VACUNO\" V \n"
                 + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = V.\"PREDIO\")\n"
                 + "INNER JOIN public.\"CATEGORIA_VACUNO\" C ON (C.\"ID_CATEGORIA\" = V.\"CATEGORIA\")\n"
-                + "WHERE V.\"ID_VACUNO\" = "+ idVacuno +"");
+                + "WHERE V.\"ID_VACUNO\" = " + idVacuno + "");
         result2 = st.executeQuery();
         while (result2.next()) {
             vacuno = new Vacuno(result2.getInt("ID_VACUNO"), result2.getString("RAZA"),
-                    result2.getDouble("PESO"), true,result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
+                    result2.getDouble("PESO"), pesoVacunoHabilitado(result2.getInt("ID_VACUNO")),
+                    result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
                     result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
         }
         st.close();
         return vacuno;
+    }
+
+    public Boolean pesoVacunoHabilitado(int idVacuno) throws Exception {
+        Boolean habilitado = false;
+        PreparedStatement st;
+        ResultSet result2;
+        st = this.getConexion().prepareCall("SELECT \"VACUNO_ID\", \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\"\n"
+                + "FROM public.\"VACUNO_PESO\"\n"
+                + "WHERE \"MES\" = EXTRACT (MONTH FROM CURRENT_DATE)\n"
+                + "AND \"VACUNO_ID\" = " + idVacuno + "");
+        result2 = st.executeQuery();
+        while (result2.next()) {
+            habilitado = true;
+        }
+        st.close();
+        return habilitado;
+
     }
 
     public Predio getPredioBYID(int idPredio) throws Exception {
