@@ -41,8 +41,10 @@ public class ColcienciasDao extends Conexion {
         ArrayList<Vacuno> listavacunos = new ArrayList();
         PreparedStatement st;
         ResultSet result;
-        st = this.getConexion().prepareCall("SELECT \"ID_VACUNO\", \"RAZA\", \"PESO\", \"PREDIO\", \"CATEGORIA\"\n"
-                + "FROM public.\"VACUNO\"");
+        st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", V.\"PREDIO\", \"CATEGORIA\", (SELECT \"PESO\"\n"
+                + "FROM public.\"VACUNO_PESO\"\n"
+                + "WHERE \"VACUNO_ID\" = V.\"ID_VACUNO\" ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO\n"
+                + "FROM public.\"VACUNO\" V");
         result = st.executeQuery();
         while (result.next()) {
             listavacunos.add(getVacunoBYID(result.getInt("ID_VACUNO")));
@@ -105,13 +107,15 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result2;
 
-        st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", V.\"PESO\",P.\"ID_PREDIO\" AS IDPREDIO,"
-                + "P.\"DESCRIPCION\" AS PREDIO,"
-                + "C.\"ID_CATEGORIA\" AS  IDCATEGORIA ,C.\"DESCRIPCION\" AS  CATEGORIA \n"
+        st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", (SELECT \"PESO\"\n"
+                + "FROM public.\"VACUNO_PESO\"\n"
+                + "WHERE \"VACUNO_ID\" = V.\"ID_VACUNO\" ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO,P.\"ID_PREDIO\" AS IDPREDIO,\n"
+                + "P.\"DESCRIPCION\" AS PREDIO,\n"
+                + "C.\"ID_CATEGORIA\" AS  IDCATEGORIA ,C.\"DESCRIPCION\" AS  CATEGORIA\n"
                 + "FROM public.\"VACUNO\" V \n"
                 + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = V.\"PREDIO\")\n"
                 + "INNER JOIN public.\"CATEGORIA_VACUNO\" C ON (C.\"ID_CATEGORIA\" = V.\"CATEGORIA\")\n"
-                + "WHERE V.\"ID_VACUNO\" = " + idVacuno + "");
+                + "WHERE V.\"ID_VACUNO\" = "+ idVacuno +"");
         result2 = st.executeQuery();
         while (result2.next()) {
             vacuno = new Vacuno(result2.getInt("ID_VACUNO"), result2.getString("RAZA"),
