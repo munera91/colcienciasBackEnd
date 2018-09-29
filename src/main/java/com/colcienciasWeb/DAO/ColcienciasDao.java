@@ -115,7 +115,7 @@ public class ColcienciasDao extends Conexion {
         result2 = st.executeQuery();
         while (result2.next()) {
             vacuno = new Vacuno(result2.getInt("ID_VACUNO"), result2.getString("RAZA"),
-                    result2.getDouble("PESO"), result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
+                    result2.getDouble("PESO"), true,result2.getInt("IDPREDIO"), result2.getString("PREDIO"),
                     result2.getInt("IDCATEGORIA"), result2.getString("CATEGORIA"));
         }
         st.close();
