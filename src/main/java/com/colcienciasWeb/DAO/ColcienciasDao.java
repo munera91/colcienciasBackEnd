@@ -129,7 +129,7 @@ public class ColcienciasDao extends Conexion {
     }
 
     public Boolean pesoVacunoHabilitado(int idVacuno) throws Exception {
-        Boolean habilitado = false;
+        Boolean habilitado = true;
         PreparedStatement st;
         ResultSet result2;
         st = this.getConexion().prepareCall("SELECT \"VACUNO_ID\", \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\"\n"
@@ -138,7 +138,7 @@ public class ColcienciasDao extends Conexion {
                 + "AND \"VACUNO_ID\" = " + idVacuno + "");
         result2 = st.executeQuery();
         while (result2.next()) {
-            habilitado = true;
+            habilitado = false;
         }
         st.close();
         return habilitado;
