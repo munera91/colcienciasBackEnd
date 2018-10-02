@@ -37,14 +37,15 @@ public class ColcienciasDao extends Conexion {
         return listaFincas;
     }
 
-    public ArrayList<Vacuno> getVacunos() throws SQLException, Exception {
+    public ArrayList<Vacuno> getVacunos(String idPredio) throws SQLException, Exception {
         ArrayList<Vacuno> listavacunos = new ArrayList();
         PreparedStatement st;
         ResultSet result;
         st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", V.\"PREDIO\", \"CATEGORIA\", (SELECT \"PESO\"\n"
                 + "FROM public.\"VACUNO_PESO\"\n"
-                + "WHERE \"VACUNO_ID\" = V.\"ID_VACUNO\" ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO\n"
-                + "FROM public.\"VACUNO\" V");
+                + "WHERE \"PREDIO\" = '" + idPredio + "'  AND \"VACUNO_ID\" = V.\"ID_VACUNO\" "
+                + "ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO\n"
+                + "FROM public.\"VACUNO\" V WHERE \"PREDIO\" = '" + idPredio + "' ");
         result = st.executeQuery();
         while (result.next()) {
             listavacunos.add(getVacunoBYID(result.getInt("ID_VACUNO")));
@@ -141,7 +142,6 @@ public class ColcienciasDao extends Conexion {
         }
         st.close();
         return habilitado;
-
     }
 
     public Predio getPredioBYID(int idPredio) throws Exception {
@@ -177,11 +177,23 @@ public class ColcienciasDao extends Conexion {
 
     public void insertarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
+        ResultSet result;
+        Integer idVacuno = null;
         st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", \"PESO\","
                 + " \"PREDIO\", \"CATEGORIA\")\n"
                 + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getPeso() + "," + vacuno.getIdPredio() + ","
-                + " " + vacuno.getIdCategoria() + ")");
-        st.executeUpdate();
+                + " " + vacuno.getIdCategoria() + ") RETURNING \"ID\" ");
+        result = st.executeQuery();
+        while (result.next()) {
+            idVacuno = result.getInt("ID_VACUNO");
+        }
+        st.close();
+        if (idVacuno != null) {
+            st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_PESO\"(\"VACUNO_ID\", \"PESO\","
+                    + " \"MES\", \"ANIO\", \"FECHA_REGISTRO\") VALUES (" + idVacuno + "," + vacuno.getPeso() + ","
+                    + " EXTRACT(MONTH FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE), CURRENT_DATE)");
+            st.executeUpdate();
+        }
         st.close();
     }
 
@@ -199,9 +211,10 @@ public class ColcienciasDao extends Conexion {
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-                + "SET \"PESO\"=" + vacuno.getPeso() + ", \"PREDIO\"=" + vacuno.getIdPredio() + ","
+                + "SET \"PREDIO\"=" + vacuno.getIdPredio() + ","
                 + " \"CATEGORIA\"=" + vacuno.getIdCategoria() + "\n"
                 + " WHERE \"ID_VACUNO\" =  '" + vacuno.getID() + "'");
+
         st.executeUpdate();
         st.close();
     }

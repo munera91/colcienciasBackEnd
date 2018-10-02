@@ -33,15 +33,16 @@ public class VacunoController {
     @Autowired
     private IVacunoBusiness vacunoBusiness;
 
-    @GetMapping(PathVacuno.VACUNO)
-    public List<Vacuno> obtenerVacunos(HttpServletResponse hsr) {
-        return vacunoBusiness.obtenerVacunos();
+    @GetMapping(PathVacuno.VACUNOS)
+    public List<Vacuno> obtenerVacunos(@PathVariable String idPredio, 
+            HttpServletResponse hsr) {
+        return vacunoBusiness.obtenerVacunos(idPredio);
     }
     
     @GetMapping(PathVacuno.VACUNO_ID)
-    public Vacuno obtenerVacuno (@PathVariable String id, 
+    public Vacuno obtenerVacuno (@PathVariable String idVacuno, 
             HttpServletResponse hsr){
-        return vacunoBusiness.obtenerVacuno(id);
+        return vacunoBusiness.obtenerVacuno(idVacuno);
     }
     
     @PostMapping(PathVacuno.VACUNO)

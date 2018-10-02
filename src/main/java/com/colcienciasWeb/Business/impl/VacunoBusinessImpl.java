@@ -26,8 +26,8 @@ public class VacunoBusinessImpl implements IVacunoBusiness{
  
 
     @Override
-    public Vacuno obtenerVacuno(String id) {
-        return vacunoDao.obtenerVacuno(id);
+    public Vacuno obtenerVacuno(String idVacuno) {
+        return vacunoDao.obtenerVacuno(idVacuno);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class VacunoBusinessImpl implements IVacunoBusiness{
     }
 
     @Override
-    public List<Vacuno> obtenerVacunos() {
-        return vacunoDao.obtenerVacunos();
+    public List<Vacuno> obtenerVacunos(String idPredio) {
+        return vacunoDao.obtenerVacunos(idPredio);
     }
     
 }

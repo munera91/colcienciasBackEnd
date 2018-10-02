@@ -25,11 +25,11 @@ public class VacunoDaoImpl implements IVacunoDao {
     ColcienciasDao dao = new ColcienciasDao();
 
     @Override
-    public List<Vacuno> obtenerVacunos() {
+    public List<Vacuno> obtenerVacunos(String idPredio) {
         ArrayList<Vacuno> vacunos = new ArrayList<>();
         try {
             System.out.println("Entro DAO");
-            vacunos = dao.getVacunos();
+            vacunos = dao.getVacunos(idPredio);
         } catch (Exception ex) {
             Logger.getLogger(VacunoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -37,11 +37,12 @@ public class VacunoDaoImpl implements IVacunoDao {
     }
 
     @Override
-    public Vacuno obtenerVacuno(String id) {
-        Vacuno vacuno = new Vacuno();
-        List<Vacuno> listado = Data.getListaVacunos();
-        for (Vacuno vac : listado) {
-            vacuno = vac;
+    public Vacuno obtenerVacuno(String idVacuno) {
+        Vacuno vacuno = null;
+        try {
+            vacuno = dao.getVacunoBYID(Integer.parseInt(idVacuno));
+        } catch (Exception ex) {
+            Logger.getLogger(VacunoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return vacuno;
     }
@@ -51,28 +52,25 @@ public class VacunoDaoImpl implements IVacunoDao {
         String respuesta = "";
         List<Vacuno> listado;
         try {
-            listado = dao.getVacunos();   
             vacuno.setIdCategoria(getCategoriaByPesoVacuno(vacuno.getPeso()));
-            listado.add(vacuno);
             dao.insertarVacuno(vacuno);
             respuesta = "Vacuno registrado";
-
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return respuesta;
     }
-    
-    public int getCategoriaByPesoVacuno(Double peso){
+
+    public int getCategoriaByPesoVacuno(Double peso) {
         int categoriaVacuno = 0;
-        if(peso <= 180.0){
-           categoriaVacuno = 1;  
-        }else if(peso <= 250.0){
-           categoriaVacuno = 2; 
-        }else if(peso <= 350.0){
-           categoriaVacuno = 3; 
-        }else{
-           categoriaVacuno = 4;  
+        if (peso <= 180.0) {
+            categoriaVacuno = 1;
+        } else if (peso <= 250.0) {
+            categoriaVacuno = 2;
+        } else if (peso <= 350.0) {
+            categoriaVacuno = 3;
+        } else {
+            categoriaVacuno = 4;
         }
         return categoriaVacuno;
     }
@@ -90,17 +88,11 @@ public class VacunoDaoImpl implements IVacunoDao {
 
     @Override
     public String modificarVacuno(Vacuno vacuno) {
-        String respuesta = "Vacuno actualizado";
-        List<Vacuno> listado;
+        String respuesta = "No se pudo actualizar el vacuno";
         vacuno.setIdCategoria(getCategoriaByPesoVacuno(vacuno.getPeso()));
         try {
-            listado = dao.getVacunos();
-            for (int i = 0; i < listado.size(); i++) {
-                if (listado.get(i).getID() == (vacuno.getID())) {
-                    dao.actualizarVacuno(vacuno);
-                    break;
-                }
-            }
+            dao.actualizarVacuno(vacuno);
+            respuesta = "Vacuno actualizado";
         } catch (Exception ex) {
             Logger.getLogger(VacunoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

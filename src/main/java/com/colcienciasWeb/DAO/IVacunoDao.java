@@ -14,8 +14,8 @@ import java.util.List;
  */
 public interface IVacunoDao {
     
-    List<Vacuno> obtenerVacunos();
-    Vacuno obtenerVacuno(String id);
+    List<Vacuno> obtenerVacunos(String idPredio);
+    Vacuno obtenerVacuno(String idVacuno);
     String crearVacuno(Vacuno vacuno);
     String eliminarVacuno(Vacuno vacuno);
     String modificarVacuno(Vacuno vacuno);
