@@ -134,7 +134,7 @@ public class ColcienciasDao extends Conexion {
         ResultSet result2;
         st = this.getConexion().prepareCall("SELECT \"VACUNO_ID\", \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\"\n"
                 + "FROM public.\"VACUNO_PESO\"\n"
-                + "WHERE \"MES\" = EXTRACT (MONTH FROM CURRENT_DATE)\n"
+                + "WHERE \"MES\" = EXTRACT (MONTH FROM CURRENT_DATE) AND \"ANIO\" = EXTRACT (YEAR FROM CURRENT_DATE) \n"
                 + "AND \"VACUNO_ID\" = " + idVacuno + "");
         result2 = st.executeQuery();
         while (result2.next()) {
