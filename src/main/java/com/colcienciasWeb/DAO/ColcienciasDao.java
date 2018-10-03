@@ -217,7 +217,7 @@ public class ColcienciasDao extends Conexion {
         st.executeUpdate();
         st.close();
 
-        if (!vacuno.getActualizarPeso()) {
+        if (vacuno.getActualizarPeso()) {
             st2 = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_PESO\"(\"VACUNO_ID\","
                     + " \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\")\n"
                     + "VALUES ("+ vacuno.getID() +", "+ vacuno.getPeso() +",EXTRACT (MONTH FROM CURRENT_DATE),"
