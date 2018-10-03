@@ -179,10 +179,10 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result;
         Integer idVacuno = null;
-        st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", \"PESO\","
+        st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", "
                 + " \"PREDIO\", \"CATEGORIA\")\n"
-                + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getPeso() + "," + vacuno.getIdPredio() + ","
-                + " " + vacuno.getIdCategoria() + ") RETURNING \"ID\" ");
+                + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getIdPredio() + ","
+                + " " + vacuno.getIdCategoria() + ") RETURNING \"ID_VACUNO\" ");
         result = st.executeQuery();
         while (result.next()) {
             idVacuno = result.getInt("ID_VACUNO");
