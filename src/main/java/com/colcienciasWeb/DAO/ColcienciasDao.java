@@ -209,14 +209,22 @@ public class ColcienciasDao extends Conexion {
     }
 
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
-        PreparedStatement st;
+        PreparedStatement st, st2;
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-                + "SET \"PREDIO\"=" + vacuno.getIdPredio() + ","
-                + " \"CATEGORIA\"=" + vacuno.getIdCategoria() + "\n"
-                + " WHERE \"ID_VACUNO\" =  '" + vacuno.getID() + "'");
-
+                + "SET  \"PREDIO\"= " + vacuno.getIdPredio() + ","
+                + "\"CATEGORIA\"= '" + vacuno.getIdCategoria() + "'\n"
+                + "WHERE \"ID_VACUNO\" = " + vacuno.getID() + "");
         st.executeUpdate();
         st.close();
+
+        if (!vacuno.getActualizarPeso()) {
+            st2 = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_PESO\"(\"VACUNO_ID\","
+                    + " \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\")\n"
+                    + "VALUES ("+ vacuno.getID() +", "+ vacuno.getPeso() +",EXTRACT (MONTH FROM CURRENT_DATE),"
+                    + "EXTRACT (YEAR FROM CURRENT_DATE), CURRENT_DATE)");
+            st2.executeUpdate();
+            st2.close();
+        }
     }
 
     public void eliminarFinca(Finca finca) throws Exception {
