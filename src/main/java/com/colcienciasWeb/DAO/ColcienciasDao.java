@@ -209,7 +209,9 @@ public class ColcienciasDao extends Conexion {
     }
 
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
-        PreparedStatement st, st2;
+        PreparedStatement st, st2, st3;
+        ResultSet result;
+        String idAlimento = null;
         st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
                 + "SET  \"PREDIO\"= " + vacuno.getIdPredio() + ","
                 + "\"CATEGORIA\"= '" + vacuno.getIdCategoria() + "'\n"
@@ -218,10 +220,19 @@ public class ColcienciasDao extends Conexion {
         st.close();
 
         if (vacuno.getActualizarPeso()) {
+
+            st3 = this.getConexion().prepareStatement("SELECT \"TIPO_ALIMENTACION\"\n"
+                    + "FROM public.\"PREDIO\"\n"
+                    + "WHERE \"ID_PREDIO\" = " + vacuno.getIdPredio() + "");
+            result = st3.executeQuery();
+            while (result.next()) {
+                idAlimento = result.getString("TIPO_ALIMENTACION");
+            }
             st2 = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_PESO\"(\"VACUNO_ID\","
                     + " \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\")\n"
-                    + "VALUES ("+ vacuno.getID() +", "+ vacuno.getPeso() +",EXTRACT (MONTH FROM CURRENT_DATE),"
-                    + "EXTRACT (YEAR FROM CURRENT_DATE), CURRENT_DATE)");
+                    + "VALUES (" + vacuno.getID() + ", " + vacuno.getPeso() + ",EXTRACT (MONTH FROM CURRENT_DATE),"
+                    + "EXTRACT (YEAR FROM CURRENT_DATE), CURRENT_DATE), '" + idAlimento + "',"
+                    + "" + vacuno.getIdPredio() + "");
             st2.executeUpdate();
             st2.close();
         }
