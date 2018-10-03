@@ -42,7 +42,7 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result;
         st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", V.\"PREDIO\", \"CATEGORIA\", (SELECT \"PESO\"\n"
-                + "FROM public.\"VACUNO_PESO\"\n"
+                + "FROM public.\"VACUNO_HISTORICO\"\n"
                 + "WHERE \"PREDIO\" = '" + idPredio + "'  AND \"VACUNO_ID\" = V.\"ID_VACUNO\" "
                 + "ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO\n"
                 + "FROM public.\"VACUNO\" V WHERE \"PREDIO\" = '" + idPredio + "' ");
@@ -109,7 +109,7 @@ public class ColcienciasDao extends Conexion {
         ResultSet result2;
 
         st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", (SELECT \"PESO\"\n"
-                + "FROM public.\"VACUNO_PESO\"\n"
+                + "FROM public.\"VACUNO_HISTORICO\"\n"
                 + "WHERE \"VACUNO_ID\" = V.\"ID_VACUNO\" ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO,P.\"ID_PREDIO\" AS IDPREDIO,\n"
                 + "P.\"DESCRIPCION\" AS PREDIO,\n"
                 + "C.\"ID_CATEGORIA\" AS  IDCATEGORIA ,C.\"DESCRIPCION\" AS  CATEGORIA\n"
@@ -133,7 +133,7 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result2;
         st = this.getConexion().prepareCall("SELECT \"VACUNO_ID\", \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\"\n"
-                + "FROM public.\"VACUNO_PESO\"\n"
+                + "FROM public.\"VACUNO_HISTORICO\"\n"
                 + "WHERE \"MES\" = EXTRACT (MONTH FROM CURRENT_DATE) AND \"ANIO\" = EXTRACT (YEAR FROM CURRENT_DATE) \n"
                 + "AND \"VACUNO_ID\" = " + idVacuno + "");
         result2 = st.executeQuery();
@@ -176,22 +176,38 @@ public class ColcienciasDao extends Conexion {
     }
 
     public void insertarVacuno(Vacuno vacuno) throws Exception {
-        PreparedStatement st;
+        PreparedStatement st, st3;
         ResultSet result;
+        ResultSet result2;
         Integer idVacuno = null;
-        st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", \"PESO\","
+        String idAlimento = null;
+        st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", "
                 + " \"PREDIO\", \"CATEGORIA\")\n"
-                + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getPeso() + "," + vacuno.getIdPredio() + ","
-                + " " + vacuno.getIdCategoria() + ") RETURNING \"ID\" ");
+                + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getIdPredio() + ","
+                + " " + vacuno.getIdCategoria() + ") RETURNING \"ID_VACUNO\" ");
         result = st.executeQuery();
         while (result.next()) {
             idVacuno = result.getInt("ID_VACUNO");
         }
         st.close();
         if (idVacuno != null) {
-            st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_PESO\"(\"VACUNO_ID\", \"PESO\","
-                    + " \"MES\", \"ANIO\", \"FECHA_REGISTRO\") VALUES (" + idVacuno + "," + vacuno.getPeso() + ","
-                    + " EXTRACT(MONTH FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE), CURRENT_DATE)");
+            st3 = this.getConexion().prepareStatement("SELECT \"TIPO_ALIMENTACION\"\n"
+                    + "FROM public.\"PREDIO\"\n"
+                    + "WHERE \"ID_PREDIO\" = " + vacuno.getIdPredio() + "");
+            result2 = st3.executeQuery();
+            while (result2.next()) {
+                idAlimento = result2.getString("TIPO_ALIMENTACION");
+            }
+            System.out.println("INSERT INTO public.\"VACUNO_HISTORICO\"(\"VACUNO_ID\", \"PESO\","
+                    + " \"MES\", \"ANIO\", \"FECHA_REGISTRO\", \"ALIMENTO\", \"PREDIO\") "
+                    + "VALUES (" + idVacuno + "," + vacuno.getPeso() + ","
+                    + " EXTRACT(MONTH FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE), CURRENT_DATE,"
+                    + " '" + idAlimento + "' , " + vacuno.getIdPredio() + ")");
+            st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_HISTORICO\"(\"VACUNO_ID\", \"PESO\","
+                    + " \"MES\", \"ANIO\", \"FECHA_REGISTRO\", \"ALIMENTO\", \"PREDIO\") "
+                    + "VALUES (" + idVacuno + "," + vacuno.getPeso() + ","
+                    + " EXTRACT(MONTH FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE), CURRENT_DATE,"
+                    + " '" + idAlimento + "' , " + vacuno.getIdPredio() + ")");
             st.executeUpdate();
         }
         st.close();
