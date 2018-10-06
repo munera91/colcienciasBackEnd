@@ -6,6 +6,7 @@
 package com.colcienciasWeb.DAO;
 
 import com.colcienciasWeb.Model.Finca;
+import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Municipio;
 import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Model.Vacuno;
@@ -14,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -126,6 +129,26 @@ public class ColcienciasDao extends Conexion {
         }
         st.close();
         return vacuno;
+    }
+
+    public ArrayList<HistoricoVacuno> getHistoricoVacuno(String idVacuno) {
+        ArrayList<HistoricoVacuno> historicoVacuno = new ArrayList<>();
+        PreparedStatement st;
+        ResultSet result;
+        try {
+            st = this.getConexion().prepareCall("SELECT \"VACUNO_ID\", \"MES\", \"ANIO\", \"PESO\", \"ALIMENTO\", A.\"DESCRIPCION\" AS \"DESCALIMENTO\",\"PREDIO\" , P.\"DESCRIPCION\" AS \"DESCPREDIO\",\"FECHA_REGISTRO\"\n"
+                    + "FROM public.\"VACUNO_HISTORICO\" VH INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = VH.\"ALIMENTO\")\n"
+                    + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + "");
+            result = st.executeQuery();
+            while(result.next()){
+                historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"),result.getInt("MES"),result.getInt("ANIO"),
+                        result.getDouble("PESO"),result.getString("ALIMENTO"), result.getString("DESCALIMENTO"),
+                        result.getInt("PREDIO"), result.getString("DESCPREDIO")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return historicoVacuno;
     }
 
     public Boolean pesoVacunoHabilitado(int idVacuno) throws Exception {
@@ -244,11 +267,11 @@ public class ColcienciasDao extends Conexion {
             while (result.next()) {
                 idAlimento = result.getString("TIPO_ALIMENTACION");
             }
-            st2 = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_PESO\"(\"VACUNO_ID\","
-                    + " \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\")\n"
+            st2 = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_HISTORICO\"(\"VACUNO_ID\","
+                    + " \"PESO\", \"MES\", \"ANIO\", \"FECHA_REGISTRO\", \"ALIMENTO\", \"PREDIO\")\n"
                     + "VALUES (" + vacuno.getID() + ", " + vacuno.getPeso() + ",EXTRACT (MONTH FROM CURRENT_DATE),"
-                    + "EXTRACT (YEAR FROM CURRENT_DATE), CURRENT_DATE), '" + idAlimento + "',"
-                    + "" + vacuno.getIdPredio() + "");
+                    + "EXTRACT (YEAR FROM CURRENT_DATE), CURRENT_DATE, '" + idAlimento + "',"
+                    + "" + vacuno.getIdPredio() + ") ");
             st2.executeUpdate();
             st2.close();
         }

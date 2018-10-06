@@ -7,6 +7,7 @@ package com.colcienciasWeb.Controller;
 
 
 import com.colcienciasWeb.Business.IVacunoBusiness;
+import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.Path.Path.PathVacuno;
 import java.util.List;
@@ -38,6 +39,13 @@ public class VacunoController {
             HttpServletResponse hsr) {
         return vacunoBusiness.obtenerVacunos(idPredio);
     }
+    
+    @GetMapping(PathVacuno.VACUNO_H)
+    public List<HistoricoVacuno> obtenerHistoricoVacuno(@PathVariable String idVacuno, 
+            HttpServletResponse hsr) {
+        return vacunoBusiness.obtenerHistoricoVacuno(idVacuno);
+    }
+    
     
     @GetMapping(PathVacuno.VACUNO_ID)
     public Vacuno obtenerVacuno (@PathVariable String idVacuno, 

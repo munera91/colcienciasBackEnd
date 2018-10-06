@@ -17,6 +17,7 @@ public class Path {
     public class PathVacuno{
         public static final String VACUNO = "/vacuno";
         public static final String VACUNO_ID = "/vacuno/{idVacuno}";
+        public static final String VACUNO_H = "/vacunoh/{idVacuno}";
         public static final String VACUNOS = "/vacunos/{idPredio}";
     }
     public class PathPredio{

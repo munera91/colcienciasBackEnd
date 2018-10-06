@@ -9,6 +9,7 @@ import com.colcienciasWeb.DAO.ColcienciasDao;
 import com.colcienciasWeb.DAO.IVacunoDao;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.Data.Data;
+import com.colcienciasWeb.Model.HistoricoVacuno;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +35,14 @@ public class VacunoDaoImpl implements IVacunoDao {
             Logger.getLogger(VacunoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return vacunos;
+    }
+    
+    @Override
+    public List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno) {
+        ArrayList<HistoricoVacuno> historicoVacuno = new ArrayList<>();
+        System.out.println("Entro DAO Historico vacuno");
+        historicoVacuno = dao.getHistoricoVacuno(idVacuno);             
+        return historicoVacuno;
     }
 
     @Override
@@ -98,5 +107,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return respuesta;
     }
+
+    
 
 }

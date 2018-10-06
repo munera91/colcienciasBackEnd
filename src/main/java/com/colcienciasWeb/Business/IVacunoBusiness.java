@@ -6,6 +6,7 @@
 package com.colcienciasWeb.Business;
 
 
+import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Vacuno;
 import java.util.List;
 
@@ -20,5 +21,6 @@ public interface IVacunoBusiness {
     String crearVacuno(Vacuno vacuno);
     String eliminarVacuno(Vacuno vacuno);
     String modificarVacuno(Vacuno vacuno);
+    List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno);
           
 }

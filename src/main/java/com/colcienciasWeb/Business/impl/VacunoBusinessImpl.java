@@ -8,6 +8,7 @@ package com.colcienciasWeb.Business.impl;
 
 import com.colcienciasWeb.Business.IVacunoBusiness;
 import com.colcienciasWeb.DAO.IVacunoDao;
+import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Vacuno;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,12 @@ public class VacunoBusinessImpl implements IVacunoBusiness{
     @Override
     public List<Vacuno> obtenerVacunos(String idPredio) {
         return vacunoDao.obtenerVacunos(idPredio);
+    }
+
+    
+    @Override
+    public List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno) {
+        return vacunoDao.obtenerHistoricoVacuno(idVacuno);
     }
     
 }
