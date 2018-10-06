@@ -85,9 +85,9 @@ public class VacunoDaoImpl implements IVacunoDao {
 
     @Override
     public String eliminarVacuno(Vacuno vacuno) {
-        String respuesta = "Vacuno eliminado";
+        String respuesta = "";
         try {
-            dao.eliminarVacuno(vacuno);
+            respuesta = dao.eliminarVacuno(vacuno);
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

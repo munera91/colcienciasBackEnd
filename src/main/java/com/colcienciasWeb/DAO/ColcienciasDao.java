@@ -28,11 +28,8 @@ public class ColcienciasDao extends Conexion {
         ArrayList<Finca> listaFincas = new ArrayList();
         PreparedStatement st;
         ResultSet result;
-        st = this.getConexion().prepareCall("SELECT \"ID_FINCA\", \"NOMBRE\", \"HECTAREAS\", \"DIRECCION\","
-                + " \"NOMBRE_PROPIETARIO\", \n"
-                + "  \"MUNICIPIO\"\n"
-                + " FROM public.\"FINCA\""
-                + "AND \"ELIMINADO\" = FALSE ");
+        st = this.getConexion().prepareCall("SELECT \"ID_FINCA\" FROM public.\"FINCA\" "
+                + "WHERE \"ELIMINADO\" = FALSE ");
         result = st.executeQuery();
         while (result.next()) {
             listaFincas.add(getFincaBYID(result.getString("ID_FINCA")));

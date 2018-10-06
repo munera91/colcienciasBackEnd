@@ -8,7 +8,6 @@ package com.colcienciasWeb.DAO.impl;
 import com.colcienciasWeb.DAO.ColcienciasDao;
 import com.colcienciasWeb.DAO.IFincaDao;
 import com.colcienciasWeb.Model.Finca;
-import com.colcienciasWeb.Data.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,15 +35,6 @@ public class FincaDaoImpl implements IFincaDao {
         return fincas;
     }
 
-    @Override
-    public Finca obtenerFinca(String id) {
-        Finca finca = new Finca();
-        List<Finca> listado = Data.getListaFinca();
-        for (Finca fin : listado) {
-            finca = fin;
-        }
-        return finca;
-    }
 
     @Override
     public String crearFinca(Finca finca) {
@@ -62,9 +52,9 @@ public class FincaDaoImpl implements IFincaDao {
 
     @Override
     public String eliminarFinca(Finca finca) {
-        String respuesta = "Finca eliminada";
+        String respuesta = "";
         try {
-            dao.eliminarFinca(finca);
+            respuesta = dao.eliminarFinca(finca);
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -87,6 +77,11 @@ public class FincaDaoImpl implements IFincaDao {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return respuesta;
+    }
+
+    @Override
+    public Finca obtenerFinca(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

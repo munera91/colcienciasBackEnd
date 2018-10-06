@@ -68,9 +68,9 @@ public class PredioDaoImpl implements IPredioDao {
 
     @Override
     public String eliminarPredio(String idPredio) {
-        String respuesta = "Predio eliminado";
+        String respuesta = "";
         try {
-            dao.eliminarPredio(idPredio);
+            respuesta = dao.eliminarPredio(idPredio);
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
