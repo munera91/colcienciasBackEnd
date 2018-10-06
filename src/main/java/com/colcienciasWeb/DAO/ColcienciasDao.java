@@ -61,7 +61,7 @@ public class ColcienciasDao extends Conexion {
         ArrayList<Predio> listaPredios = new ArrayList();
         PreparedStatement st;
         ResultSet result;
-        st = this.getConexion().prepareCall("SELECT \"ID_PREDIO\", \"DESCRIPCION\", \"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\"\n"
+        st = this.getConexion().prepareCall("SELECT \"ID_PREDIO\"\n"
                 + "FROM public.\"PREDIO\"\n"
                 + "WHERE \"FINCA\" = '" + idFinca + "' ");
         result = st.executeQuery();
@@ -172,7 +172,7 @@ public class ColcienciasDao extends Conexion {
         PreparedStatement st;
         ResultSet result2;
         st = this.getConexion().prepareCall("SELECT P.\"ID_PREDIO\", P.\"DESCRIPCION\", A.\"ID_TIPO_ALIMENTACION\" AS IDALIMENTO ,A.\"DESCRIPCION\" AS ALIMENTO,T.\"ID_TIPO_TERRENO\" AS IDTERRENO ,T.\"DESCRIPCION\" AS TERRENO,F.\"NOMBRE\",\n"
-                + "F.\"ID_FINCA\" AS IDFINCA ,F.\"NOMBRE\" AS FINCA FROM public.\"PREDIO\" P\n"
+                + "F.\"ID_FINCA\" AS IDFINCA ,F.\"NOMBRE\" AS FINCA, P.\"CANTIDAD_MAX\" FROM public.\"PREDIO\" P\n"
                 + "INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = P.\"TIPO_ALIMENTACION\")\n"
                 + "INNER JOIN public.\"TIPO_TERRENO\" T ON (T.\"ID_TIPO_TERRENO\" = P.\"TIPO_TERRENO\")\n"
                 + "INNER JOIN public.\"FINCA\" F ON (F.\"ID_FINCA\" = P.\"FINCA\")\n"
@@ -182,7 +182,7 @@ public class ColcienciasDao extends Conexion {
             predio = new Predio(result2.getInt("ID_PREDIO"), result2.getString("DESCRIPCION"),
                     result2.getInt("IDALIMENTO"), result2.getString("ALIMENTO"),
                     result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
-                    result2.getInt("IDFINCA"), result2.getString("FINCA"));
+                    result2.getInt("IDFINCA"), result2.getString("FINCA"),result2.getInt("CANTIDAD_MAX"));
         }
         st.close();
         return predio;
@@ -296,22 +296,19 @@ public class ColcienciasDao extends Conexion {
     public void insertarPredio(Predio predio) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
-                + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\")\n"
+                + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\",\"CANTIDAD_MAX\")\n"
                 + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
-                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + " )");
+                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + ", "+ predio.getCantidadMax() +" )");
         st.executeUpdate();
         st.close();
     }
 
     public void actualizarPredio(Predio predio) throws Exception {
         PreparedStatement st;
-        System.out.println("UPDATE public.\"PREDIO\"\n"
-                + "\"DESCRIPCION\"='" + predio.getDescripcion() + "', \"TIPO_ALIMENTACION\"=" + predio.getIdTipoAlimentacion() + ","
-                + " \"TIPO_TERRENO\"=" + predio.getIdTipoTerreno() + "\n"
-                + " WHERE \"ID_PREDIO\" =  '" + predio.getID() + "'");
         st = this.getConexion().prepareStatement("UPDATE public.\"PREDIO\" SET \n"
                 + "\"DESCRIPCION\"='" + predio.getDescripcion() + "', \"TIPO_ALIMENTACION\"=" + predio.getIdTipoAlimentacion() + ","
                 + " \"TIPO_TERRENO\"=" + predio.getIdTipoTerreno() + "\n"
+                + " \"CANTIDAD_MAX\"=" + predio.getCantidadMax() + "\n"
                 + " WHERE \"ID_PREDIO\" =  '" + predio.getID() + "'");
         st.executeUpdate();
         st.close();
