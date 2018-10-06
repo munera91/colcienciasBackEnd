@@ -31,7 +31,8 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareCall("SELECT \"ID_FINCA\", \"NOMBRE\", \"HECTAREAS\", \"DIRECCION\","
                 + " \"NOMBRE_PROPIETARIO\", \n"
                 + "  \"MUNICIPIO\"\n"
-                + " FROM public.\"FINCA\"");
+                + " FROM public.\"FINCA\""
+                + "AND \"ELIMINADO\" = FALSE ");
         result = st.executeQuery();
         while (result.next()) {
             listaFincas.add(getFincaBYID(result.getString("ID_FINCA")));
@@ -48,7 +49,8 @@ public class ColcienciasDao extends Conexion {
                 + "FROM public.\"VACUNO_HISTORICO\"\n"
                 + "WHERE \"PREDIO\" = '" + idPredio + "'  AND \"VACUNO_ID\" = V.\"ID_VACUNO\" "
                 + "ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO\n"
-                + "FROM public.\"VACUNO\" V WHERE \"PREDIO\" = '" + idPredio + "' ");
+                + "FROM public.\"VACUNO\" V WHERE \"PREDIO\" = '" + idPredio + "' "
+                + "AND \"ELIMINADO\" = FALSE ");
         result = st.executeQuery();
         while (result.next()) {
             listavacunos.add(getVacunoBYID(result.getInt("ID_VACUNO")));
@@ -63,7 +65,8 @@ public class ColcienciasDao extends Conexion {
         ResultSet result;
         st = this.getConexion().prepareCall("SELECT \"ID_PREDIO\"\n"
                 + "FROM public.\"PREDIO\"\n"
-                + "WHERE \"FINCA\" = '" + idFinca + "' ");
+                + "WHERE \"FINCA\" = '" + idFinca + "' "
+                + "AND \"ELIMINADO\" = FALSE");
         result = st.executeQuery();
         while (result.next()) {
             listaPredios.add(getPredioBYID(result.getInt("ID_PREDIO")));
@@ -140,9 +143,9 @@ public class ColcienciasDao extends Conexion {
                     + "FROM public.\"VACUNO_HISTORICO\" VH INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = VH.\"ALIMENTO\")\n"
                     + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + "");
             result = st.executeQuery();
-            while(result.next()){
-                historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"),result.getInt("MES"),result.getInt("ANIO"),
-                        result.getDouble("PESO"),result.getString("ALIMENTO"), result.getString("DESCALIMENTO"),
+            while (result.next()) {
+                historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"), result.getInt("MES"), result.getInt("ANIO"),
+                        result.getDouble("PESO"), result.getString("ALIMENTO"), result.getString("DESCALIMENTO"),
                         result.getInt("PREDIO"), result.getString("DESCPREDIO")));
             }
         } catch (SQLException ex) {
@@ -182,7 +185,7 @@ public class ColcienciasDao extends Conexion {
             predio = new Predio(result2.getInt("ID_PREDIO"), result2.getString("DESCRIPCION"),
                     result2.getInt("IDALIMENTO"), result2.getString("ALIMENTO"),
                     result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
-                    result2.getInt("IDFINCA"), result2.getString("FINCA"),result2.getInt("CANTIDAD_MAX"));
+                    result2.getInt("IDFINCA"), result2.getString("FINCA"), result2.getInt("CANTIDAD_MAX"));
         }
         st.close();
         return predio;
@@ -277,20 +280,36 @@ public class ColcienciasDao extends Conexion {
         }
     }
 
-    public void eliminarFinca(Finca finca) throws Exception {
+    public String eliminarFinca(Finca finca) throws Exception {
         PreparedStatement st;
-        st = this.getConexion().prepareStatement("DELETE FROM public.\"FINCA\" "
-                + "WHERE \"ID_FINCA\" = '" + finca.getID() + "'");
-        st.executeUpdate();
-        st.close();
+        String eliminado;
+        ArrayList<Predio> listapredio = new ArrayList();
+
+        listapredio = getPredios(String.valueOf(finca.getID()));
+        if (listapredio.size() > 0) {
+            eliminado = "No se puede eliminar la finca, ya que tiene predios registrados\n"
+                    + "en ella. Primero elimine los predios.";
+        } else {
+            st = this.getConexion().prepareStatement("UPDATE public.\"FINCA\"\n"
+                    + "   SET \"ELIMINADO\"= TRUE\n"
+                    + " WHERE \"ID_FINCA\" = " + finca.getID() + "");
+            st.executeUpdate();
+            st.close();
+            eliminado = "Finca eliminada correctamente.";
+        }
+        return eliminado;
     }
 
-    public void eliminarVacuno(Vacuno vacuno) throws Exception {
+    public String eliminarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
-        st = this.getConexion().prepareStatement("DELETE FROM public.\"VACUNO\" "
-                + "WHERE \"ID_VACUNO\" = '" + vacuno.getID() + "'");
+        String eliminado = "";
+        st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
+                + "   SET \"ELIMINADO\"= TRUE\n"
+                + " WHERE \"ID_VACUNO\" = " + vacuno.getID() + "");
         st.executeUpdate();
         st.close();
+        eliminado = "Vacuno, eliminado correctamente";
+        return eliminado;
     }
 
     public void insertarPredio(Predio predio) throws Exception {
@@ -298,7 +317,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
                 + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\",\"CANTIDAD_MAX\")\n"
                 + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
-                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + ", "+ predio.getCantidadMax() +" )");
+                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + ", " + predio.getCantidadMax() + " )");
         st.executeUpdate();
         st.close();
     }
@@ -314,12 +333,24 @@ public class ColcienciasDao extends Conexion {
         st.close();
     }
 
-    public void eliminarPredio(String idPredio) throws Exception {
+    public String eliminarPredio(String idPredio) throws Exception {
         PreparedStatement st;
-        st = this.getConexion().prepareStatement("DELETE FROM public.\"PREDIO\" "
-                + "WHERE \"ID_PREDIO\" = '" + idPredio + "'");
-        st.executeUpdate();
-        st.close();
+        String eliminado;
+        ArrayList<Vacuno> listavacunos = new ArrayList();
+
+        listavacunos = getVacunos(idPredio);
+        if (listavacunos.size() > 0) {
+            eliminado = "No se puede eliminar el predio, ya que tiene vacunos registrados\n"
+                    + "en el. Primero elimine o mueva los vacunos a otro predio.";
+        } else {
+            st = this.getConexion().prepareStatement("UPDATE public.\"PREDIO\"\n"
+                    + "   SET \"ELIMINADO\"= TRUE\n"
+                    + " WHERE \"ID_PREDIO\" = " + idPredio + "");
+            st.executeUpdate();
+            st.close();
+            eliminado = "Predio eliminado correctamente.";
+        }
+        return eliminado;
     }
 
 }
