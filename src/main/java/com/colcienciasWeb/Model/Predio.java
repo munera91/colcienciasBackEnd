@@ -19,11 +19,13 @@ public class Predio {
     String descTipoTerreno;
     int idFinca;
     String descFinca;
+    int cantidadMax;
 
     public Predio() {
     }
 
-    public Predio(int ID, String descripcion, int idTipoAlimentacion, String descTipoAlimentacion, int idTipoTerreno, String descTipoTerreno, int idFinca, String descFinca) {
+    public Predio(int ID, String descripcion, int idTipoAlimentacion, String descTipoAlimentacion, int idTipoTerreno, String descTipoTerreno, int idFinca,
+            String descFinca, int cantidadMax) {
         this.ID = ID;
         this.descripcion = descripcion;
         this.idTipoAlimentacion = idTipoAlimentacion;
@@ -32,6 +34,7 @@ public class Predio {
         this.descTipoTerreno = descTipoTerreno;
         this.idFinca = idFinca;
         this.descFinca = descFinca;
+        this.cantidadMax = cantidadMax;
     }
 
    
@@ -100,6 +103,15 @@ public class Predio {
         this.descFinca = descFinca;
     }
 
+    public int getCantidadMax() {
+        return cantidadMax;
+    }
+
+    public void setCantidadMax(int cantidadMax) {
+        this.cantidadMax = cantidadMax;
+    }
+
+    
     
 
     @Override
