@@ -62,8 +62,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         List<Vacuno> listado;
         try {
             vacuno.setIdCategoria(getCategoriaByPesoVacuno(vacuno.getPeso()));
-            dao.insertarVacuno(vacuno);
-            respuesta = "Vacuno registrado";
+            respuesta = dao.insertarVacuno(vacuno);
         } catch (Exception ex) {
             Logger.getLogger(FincaDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

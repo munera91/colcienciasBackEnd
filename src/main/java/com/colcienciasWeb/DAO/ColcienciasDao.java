@@ -182,7 +182,7 @@ public class ColcienciasDao extends Conexion {
             predio = new Predio(result2.getInt("ID_PREDIO"), result2.getString("DESCRIPCION"),
                     result2.getInt("IDALIMENTO"), result2.getString("ALIMENTO"),
                     result2.getInt("IDTERRENO"), result2.getString("TERRENO"),
-                    result2.getInt("IDFINCA"), result2.getString("FINCA"),result2.getInt("CANTIDAD_MAX"));
+                    result2.getInt("IDFINCA"), result2.getString("FINCA"), result2.getInt("CANTIDAD_MAX"));
         }
         st.close();
         return predio;
@@ -198,42 +198,46 @@ public class ColcienciasDao extends Conexion {
         st.close();
     }
 
-    public void insertarVacuno(Vacuno vacuno) throws Exception {
+    public String insertarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st, st3;
         ResultSet result;
         ResultSet result2;
-        Integer idVacuno = null;
+        Integer idVacuno = null, cantMaximaPredio = 0;
         String idAlimento = null;
-        st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", "
-                + " \"PREDIO\", \"CATEGORIA\")\n"
-                + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getIdPredio() + ","
-                + " " + vacuno.getIdCategoria() + ") RETURNING \"ID_VACUNO\" ");
-        result = st.executeQuery();
-        while (result.next()) {
-            idVacuno = result.getInt("ID_VACUNO");
+        String mensaje = "Vacuno registrado correctamente";
+        st3 = this.getConexion().prepareStatement("SELECT \"TIPO_ALIMENTACION\",\"CANTIDAD_MAX\" \n"
+                + "FROM public.\"PREDIO\"\n"
+                + "WHERE \"ID_PREDIO\" = " + vacuno.getIdPredio() + "");
+        result2 = st3.executeQuery();
+        while (result2.next()) {
+            idAlimento = result2.getString("TIPO_ALIMENTACION");
+            cantMaximaPredio = result2.getInt("CANTIDAD_MAX");
         }
-        st.close();
-        if (idVacuno != null) {
-            st3 = this.getConexion().prepareStatement("SELECT \"TIPO_ALIMENTACION\"\n"
-                    + "FROM public.\"PREDIO\"\n"
-                    + "WHERE \"ID_PREDIO\" = " + vacuno.getIdPredio() + "");
-            result2 = st3.executeQuery();
-            while (result2.next()) {
-                idAlimento = result2.getString("TIPO_ALIMENTACION");
+        System.out.println("CantMaximaPredio " + cantMaximaPredio);
+        System.out.println("CantActualPredio" + getCantVacunosRegistradosByPredio(vacuno.getIdPredio()));
+        if (cantMaximaPredio > getCantVacunosRegistradosByPredio(vacuno.getIdPredio())) {
+            st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO\"(\"ID_VACUNO\", \"RAZA\", "
+                    + " \"PREDIO\", \"CATEGORIA\")\n"
+                    + "VALUES (default,'" + vacuno.getRaza() + "'," + vacuno.getIdPredio() + ","
+                    + " " + vacuno.getIdCategoria() + ") RETURNING \"ID_VACUNO\" ");
+            result = st.executeQuery();
+            while (result.next()) {
+                idVacuno = result.getInt("ID_VACUNO");
             }
-            System.out.println("INSERT INTO public.\"VACUNO_HISTORICO\"(\"VACUNO_ID\", \"PESO\","
-                    + " \"MES\", \"ANIO\", \"FECHA_REGISTRO\", \"ALIMENTO\", \"PREDIO\") "
-                    + "VALUES (" + idVacuno + "," + vacuno.getPeso() + ","
-                    + " EXTRACT(MONTH FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE), CURRENT_DATE,"
-                    + " '" + idAlimento + "' , " + vacuno.getIdPredio() + ")");
-            st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_HISTORICO\"(\"VACUNO_ID\", \"PESO\","
-                    + " \"MES\", \"ANIO\", \"FECHA_REGISTRO\", \"ALIMENTO\", \"PREDIO\") "
-                    + "VALUES (" + idVacuno + "," + vacuno.getPeso() + ","
-                    + " EXTRACT(MONTH FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE), CURRENT_DATE,"
-                    + " '" + idAlimento + "' , " + vacuno.getIdPredio() + ")");
-            st.executeUpdate();
+            st.close();
+            if (idVacuno != null) {
+                st = this.getConexion().prepareStatement("INSERT INTO public.\"VACUNO_HISTORICO\"(\"VACUNO_ID\", \"PESO\","
+                        + " \"MES\", \"ANIO\", \"FECHA_REGISTRO\", \"ALIMENTO\", \"PREDIO\") "
+                        + "VALUES (" + idVacuno + "," + vacuno.getPeso() + ","
+                        + " EXTRACT(MONTH FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE), CURRENT_DATE,"
+                        + " '" + idAlimento + "' , " + vacuno.getIdPredio() + ")");
+                st.executeUpdate();
+            }
+            st.close();
+        } else {
+            mensaje = "No fue posible registrar el vacuno, el predio está lleno";
         }
-        st.close();
+        return mensaje;
     }
 
     public int getCantVacunosRegistradosByPredio(int idPredio) {
@@ -241,13 +245,13 @@ public class ColcienciasDao extends Conexion {
         ResultSet result;
         int cantVacunos = 0;
         try {
-            st1 = this.getConexion().prepareStatement("SELECT \"CANTIDAD_MAX\"\n"
-                    + "FROM public.\"PREDIO\"\n"
-                    + "WHERE \"ID_PREDIO\" = " + idPredio + "");
+            st1 = this.getConexion().prepareStatement("SELECT COUNT(*) AS cantactual FROM public.\"VACUNO\" "
+                    + "WHERE \"PREDIO\" = " + idPredio + "");
             result = st1.executeQuery();
             while (result.next()) {
-                cantVacunos = result.getInt("CANTIDAD_MAX");
+                cantVacunos = result.getInt("cantactual");
             }
+            result.close();
         } catch (SQLException ex) {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -316,7 +320,7 @@ public class ColcienciasDao extends Conexion {
         st = this.getConexion().prepareStatement("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
                 + "\"TIPO_ALIMENTACION\", \"TIPO_TERRENO\", \"FINCA\",\"CANTIDAD_MAX\")\n"
                 + "VALUES (DEFAULT,'" + predio.getDescripcion() + "'," + predio.getIdTipoAlimentacion() + ","
-                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + ", "+ predio.getCantidadMax() +" )");
+                + "" + predio.getIdTipoTerreno() + ", " + predio.getIdFinca() + ", " + predio.getCantidadMax() + " )");
         st.executeUpdate();
         st.close();
     }
