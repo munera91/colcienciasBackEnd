@@ -140,9 +140,9 @@ public class ColcienciasDao extends Conexion {
                     + "FROM public.\"VACUNO_HISTORICO\" VH INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = VH.\"ALIMENTO\")\n"
                     + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + "");
             result = st.executeQuery();
-            while(result.next()){
-                historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"),result.getInt("MES"),result.getInt("ANIO"),
-                        result.getDouble("PESO"),result.getString("ALIMENTO"), result.getString("DESCALIMENTO"),
+            while (result.next()) {
+                historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"), result.getInt("MES"), result.getInt("ANIO"),
+                        result.getDouble("PESO"), result.getString("ALIMENTO"), result.getString("DESCALIMENTO"),
                         result.getInt("PREDIO"), result.getString("DESCPREDIO")));
             }
         } catch (SQLException ex) {
@@ -234,6 +234,24 @@ public class ColcienciasDao extends Conexion {
             st.executeUpdate();
         }
         st.close();
+    }
+
+    public int getCantVacunosRegistradosByPredio(int idPredio) {
+        PreparedStatement st1;
+        ResultSet result;
+        int cantVacunos = 0;
+        try {
+            st1 = this.getConexion().prepareStatement("SELECT \"CANTIDAD_MAX\"\n"
+                    + "FROM public.\"PREDIO\"\n"
+                    + "WHERE \"ID_PREDIO\" = " + idPredio + "");
+            result = st1.executeQuery();
+            while (result.next()) {
+                cantVacunos = result.getInt("CANTIDAD_MAX");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cantVacunos;
     }
 
     public void actualizarFinca(Finca finca) throws Exception {
