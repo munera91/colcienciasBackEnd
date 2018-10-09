@@ -322,12 +322,18 @@ public class ColcienciasDao extends Conexion {
     public String eliminarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
         String eliminado = "";
-        st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
-                + "   SET \"ELIMINADO\"= TRUE\n"
-                + " WHERE \"ID_VACUNO\" = " + vacuno.getID() + "");
-        st.executeUpdate();
-        st.close();
-        eliminado = "Vacuno, eliminado correctamente";
+        try {
+            st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
+                    + "   SET \"ELIMINADO\"= TRUE\n"
+                    + " WHERE \"ID_VACUNO\" = " + vacuno.getID() + "");
+            st.executeUpdate();
+            eliminado = "Vacuno eliminado correctamente";
+            st.close();
+        } catch (SQLException ex) {
+            eliminado = "No fue posible eliminar el vacuno";
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return eliminado;
     }
 
@@ -344,9 +350,9 @@ public class ColcienciasDao extends Conexion {
     public void actualizarPredio(Predio predio) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("UPDATE public.\"PREDIO\" SET \n"
-                + "\"DESCRIPCION\"='" + predio.getDescripcion() + "', \"TIPO_ALIMENTACION\"=" + predio.getIdTipoAlimentacion() + ","
-                + " \"TIPO_TERRENO\"=" + predio.getIdTipoTerreno() + "\n"
-                + " \"CANTIDAD_MAX\"=" + predio.getCantidadMax() + "\n"
+                + "\"DESCRIPCION\"= '" + predio.getDescripcion() + "', \"TIPO_ALIMENTACION\"=" + predio.getIdTipoAlimentacion() + ","
+                + " \"TIPO_TERRENO\"= " + predio.getIdTipoTerreno() + ",\n"
+                + " \"CANTIDAD_MAX\"= " + predio.getCantidadMax() + "\n"
                 + " WHERE \"ID_PREDIO\" =  '" + predio.getID() + "'");
         st.executeUpdate();
         st.close();

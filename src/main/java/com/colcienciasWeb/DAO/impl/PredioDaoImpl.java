@@ -40,10 +40,7 @@ public class PredioDaoImpl implements IPredioDao {
     public Predio obtenerPredio(String id) {
         Predio predio = new Predio();
         try {
-            ArrayList<Predio> predios = dao.getPredios(id);
-            for (Predio pr : predios) {
-                predio = pr;
-            }
+            predio = dao.getPredioBYID(Integer.parseInt(id));
         } catch (Exception ex) {
             Logger.getLogger(PredioDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
