@@ -177,6 +177,7 @@ public class ColcienciasDao extends Conexion {
                 + "INNER JOIN public.\"TIPO_TERRENO\" T ON (T.\"ID_TIPO_TERRENO\" = P.\"TIPO_TERRENO\")\n"
                 + "INNER JOIN public.\"FINCA\" F ON (F.\"ID_FINCA\" = P.\"FINCA\")\n"
                 + "WHERE P.\"ID_PREDIO\" = " + idPredio + "");
+        System.out.println(st);
         result2 = st.executeQuery();
         while (result2.next()) {
             predio = new Predio(result2.getInt("ID_PREDIO"), result2.getString("DESCRIPCION"),
