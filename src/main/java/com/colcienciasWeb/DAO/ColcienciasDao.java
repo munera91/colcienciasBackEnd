@@ -11,6 +11,7 @@ import com.colcienciasWeb.Model.Municipio;
 import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.utilities.Conexion;
+import com.colcienciasWeb.utilities.Utilities;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -138,10 +139,15 @@ public class ColcienciasDao extends Conexion {
         try {
             st = this.getConexion().prepareCall("SELECT \"VACUNO_ID\", \"MES\", \"ANIO\", \"PESO\", \"ALIMENTO\", A.\"DESCRIPCION\" AS \"DESCALIMENTO\",\"PREDIO\" , P.\"DESCRIPCION\" AS \"DESCPREDIO\",\"FECHA_REGISTRO\"\n"
                     + "FROM public.\"VACUNO_HISTORICO\" VH INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = VH.\"ALIMENTO\")\n"
-                    + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + "");
+                    + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + ""
+                    + " ORDER BY \"MES\", \"ANIO\" desc");
+            System.out.println("SELECT \"VACUNO_ID\", \"MES\", \"ANIO\", \"PESO\", \"ALIMENTO\", A.\"DESCRIPCION\" AS \"DESCALIMENTO\",\"PREDIO\" , P.\"DESCRIPCION\" AS \"DESCPREDIO\",\"FECHA_REGISTRO\"\n"
+                    + "FROM public.\"VACUNO_HISTORICO\" VH INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = VH.\"ALIMENTO\")\n"
+                    + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + ""
+                    + " ORDER BY \"ANIO\" desc, \"MES\" desc");
             result = st.executeQuery();
             while (result.next()) {
-                historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"), result.getInt("MES"), result.getInt("ANIO"),
+                historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"), Utilities.MesIntAString(result.getInt("MES")), result.getInt("ANIO"),
                         result.getDouble("PESO"), result.getString("ALIMENTO"), result.getString("DESCALIMENTO"),
                         result.getInt("PREDIO"), result.getString("DESCPREDIO")));
             }
@@ -319,13 +325,13 @@ public class ColcienciasDao extends Conexion {
         return eliminado;
     }
 
-    public String eliminarVacuno(Vacuno vacuno) throws Exception {
+    public String eliminarVacuno(String idVacuno) throws Exception {
         PreparedStatement st;
         String eliminado = "";
         try {
             st = this.getConexion().prepareStatement("UPDATE public.\"VACUNO\"\n"
                     + "   SET \"ELIMINADO\"= TRUE\n"
-                    + " WHERE \"ID_VACUNO\" = " + vacuno.getID() + "");
+                    + " WHERE \"ID_VACUNO\" = '" + idVacuno + "' ");
             st.executeUpdate();
             eliminado = "Vacuno eliminado correctamente";
             st.close();
@@ -333,7 +339,6 @@ public class ColcienciasDao extends Conexion {
             eliminado = "No fue posible eliminar el vacuno";
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return eliminado;
     }
 

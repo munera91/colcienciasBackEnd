@@ -19,7 +19,7 @@ public interface IVacunoBusiness {
     List<Vacuno> obtenerVacunos(String idPredio);
     Vacuno obtenerVacuno(String id);
     String crearVacuno(Vacuno vacuno);
-    String eliminarVacuno(Vacuno vacuno);
+    String eliminarVacuno(String idVacuno);
     String modificarVacuno(Vacuno vacuno);
     List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno);
           
