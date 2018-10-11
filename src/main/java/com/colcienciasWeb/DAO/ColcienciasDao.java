@@ -5,6 +5,7 @@
  */
 package com.colcienciasWeb.DAO;
 
+import com.colcienciasWeb.Model.ConsumoAlimento;
 import com.colcienciasWeb.Model.Finca;
 import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Municipio;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
  * @author Juliana. Maldonado
  */
 public class ColcienciasDao extends Conexion {
-
+    
     public ArrayList<Finca> getFincas() throws SQLException, Exception {
         ArrayList<Finca> listaFincas = new ArrayList();
         PreparedStatement st;
@@ -38,7 +39,7 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return listaFincas;
     }
-
+    
     public ArrayList<Vacuno> getVacunos(String idPredio) throws SQLException, Exception {
         ArrayList<Vacuno> listavacunos = new ArrayList();
         PreparedStatement st;
@@ -56,7 +57,7 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return listavacunos;
     }
-
+    
     public ArrayList<Predio> getPredios(String idFinca) throws SQLException, Exception {
         ArrayList<Predio> listaPredios = new ArrayList();
         PreparedStatement st;
@@ -72,7 +73,7 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return listaPredios;
     }
-
+    
     public ArrayList<Municipio> getMunicipios(String idDepartamento) throws SQLException, Exception {
         ArrayList<Municipio> listaMunicipios = new ArrayList();
         PreparedStatement st;
@@ -86,7 +87,7 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return listaMunicipios;
     }
-
+    
     public Finca getFincaBYID(String idFinca) throws Exception {
         Finca finca = null;
         PreparedStatement st;
@@ -106,12 +107,12 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return finca;
     }
-
+    
     public Vacuno getVacunoBYID(int idVacuno) throws Exception {
         Vacuno vacuno = null;
         PreparedStatement st;
         ResultSet result2;
-
+        
         st = this.getConexion().prepareCall("SELECT V.\"ID_VACUNO\", V.\"RAZA\", (SELECT \"PESO\"\n"
                 + "FROM public.\"VACUNO_HISTORICO\"\n"
                 + "WHERE \"VACUNO_ID\" = V.\"ID_VACUNO\" ORDER BY \"FECHA_REGISTRO\" desc limit 1) AS PESO,P.\"ID_PREDIO\" AS IDPREDIO,\n"
@@ -131,7 +132,7 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return vacuno;
     }
-
+    
     public ArrayList<HistoricoVacuno> getHistoricoVacuno(String idVacuno) {
         ArrayList<HistoricoVacuno> historicoVacuno = new ArrayList<>();
         PreparedStatement st;
@@ -151,7 +152,7 @@ public class ColcienciasDao extends Conexion {
         }
         return historicoVacuno;
     }
-
+    
     public Boolean pesoVacunoHabilitado(int idVacuno) throws Exception {
         Boolean habilitado = true;
         PreparedStatement st;
@@ -167,7 +168,7 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return habilitado;
     }
-
+    
     public Predio getPredioBYID(int idPredio) throws Exception {
         Predio predio = null;
         PreparedStatement st;
@@ -189,7 +190,7 @@ public class ColcienciasDao extends Conexion {
         st.close();
         return predio;
     }
-
+    
     public void insertarFinca(Finca finca) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("INSERT INTO PUBLIC.\"FINCA\"(\"ID_FINCA\",\"NOMBRE\","
@@ -199,7 +200,7 @@ public class ColcienciasDao extends Conexion {
         st.executeUpdate();
         st.close();
     }
-
+    
     public String insertarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st, st3;
         ResultSet result;
@@ -241,7 +242,7 @@ public class ColcienciasDao extends Conexion {
         }
         return mensaje;
     }
-
+    
     public int getCantVacunosRegistradosByPredio(int idPredio) {
         PreparedStatement st1;
         ResultSet result;
@@ -259,7 +260,7 @@ public class ColcienciasDao extends Conexion {
         }
         return cantVacunos;
     }
-
+    
     public void actualizarFinca(Finca finca) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("UPDATE public.\"FINCA\"\n"
@@ -270,7 +271,7 @@ public class ColcienciasDao extends Conexion {
         st.executeUpdate();
         st.close();
     }
-
+    
     public void actualizarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st, st2, st3;
         ResultSet result;
@@ -281,9 +282,9 @@ public class ColcienciasDao extends Conexion {
                 + "WHERE \"ID_VACUNO\" = " + vacuno.getID() + "");
         st.executeUpdate();
         st.close();
-
+        
         if (vacuno.getActualizarPeso()) {
-
+            
             st3 = this.getConexion().prepareStatement("SELECT \"TIPO_ALIMENTACION\"\n"
                     + "FROM public.\"PREDIO\"\n"
                     + "WHERE \"ID_PREDIO\" = " + vacuno.getIdPredio() + "");
@@ -300,12 +301,12 @@ public class ColcienciasDao extends Conexion {
             st2.close();
         }
     }
-
+    
     public String eliminarFinca(Finca finca) throws Exception {
         PreparedStatement st;
         String eliminado;
         ArrayList<Predio> listapredio = new ArrayList();
-
+        
         listapredio = getPredios(String.valueOf(finca.getID()));
         if (listapredio.size() > 0) {
             eliminado = "No se puede eliminar la finca, ya que tiene predios registrados\n"
@@ -320,7 +321,7 @@ public class ColcienciasDao extends Conexion {
         }
         return eliminado;
     }
-
+    
     public String eliminarVacuno(Vacuno vacuno) throws Exception {
         PreparedStatement st;
         String eliminado = "";
@@ -335,10 +336,10 @@ public class ColcienciasDao extends Conexion {
             eliminado = "No fue posible eliminar el vacuno";
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         return eliminado;
     }
-
+    
     public void insertarPredio(Predio predio) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("INSERT INTO public.\"PREDIO\"(\"ID_PREDIO\", \"DESCRIPCION\","
@@ -348,7 +349,7 @@ public class ColcienciasDao extends Conexion {
         st.executeUpdate();
         st.close();
     }
-
+    
     public void actualizarPredio(Predio predio) throws Exception {
         PreparedStatement st;
         st = this.getConexion().prepareStatement("UPDATE public.\"PREDIO\" SET \n"
@@ -359,12 +360,12 @@ public class ColcienciasDao extends Conexion {
         st.executeUpdate();
         st.close();
     }
-
+    
     public String eliminarPredio(String idPredio) throws Exception {
         PreparedStatement st;
         String eliminado;
         ArrayList<Vacuno> listavacunos = new ArrayList();
-
+        
         listavacunos = getVacunos(idPredio);
         if (listavacunos.size() > 0) {
             eliminado = "No se puede eliminar el predio, ya que tiene vacunos registrados\n"
@@ -379,8 +380,8 @@ public class ColcienciasDao extends Conexion {
         }
         return eliminado;
     }
-
-    public PropiedadAlimento getTableNutritional(String tipoAlimento) {
+    
+    public PropiedadAlimento getNutritionalTable(String tipoAlimento) {
         PreparedStatement st1;
         ResultSet result;
         PropiedadAlimento table = null;
@@ -388,7 +389,7 @@ public class ColcienciasDao extends Conexion {
             st1 = this.getConexion().prepareStatement("SELECT \"TIPO_ALIMENTO\", \"PROTEINA_CRUDA\", \"PROTEINA_DIGESTIVA\", \"FIBRA_CRUDA\", \n"
                     + "  \"CARBOHIDRATO\", \"EXTRACTOR_ETERO\"\n"
                     + "  FROM public.\"PROPIEDADES_ALIMENTO\"\n"
-                    + "  WHERE \"TIPO_ALIMENTO\" = '"+ tipoAlimento +"'");
+                    + "  WHERE \"TIPO_ALIMENTO\" = '" + tipoAlimento + "'");
             result = st1.executeQuery();
             while (result.next()) {
                 table = new PropiedadAlimento(tipoAlimento, result.getDouble("PROTEINA_CRUDA"),
@@ -402,5 +403,23 @@ public class ColcienciasDao extends Conexion {
         }
         return table;
     }
-
+    
+    public ConsumoAlimento getFoodConsumption(String categoriaVacuno) {
+        PreparedStatement st1;
+        ResultSet result;
+        ConsumoAlimento alimento = null;
+        try {
+            st1 = this.getConexion().prepareStatement("SELECT \"CATEGORIA_VACUNO\", \"CANTIDAD\"\n"
+                    + "FROM public.\"CONSUMO_ALIMENTO\"\n"
+                    + "WHERE \"CATEGORIA_VACUNO\" = '" + categoriaVacuno + "'");
+            result = st1.executeQuery();
+            while (result.next()) {
+                alimento = new ConsumoAlimento(categoriaVacuno, result.getDouble("CONSUMO_ALIMENTO"));
+            }
+            result.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return alimento;
+    }
 }
