@@ -9,6 +9,7 @@ import com.colcienciasWeb.Model.Finca;
 import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Municipio;
 import com.colcienciasWeb.Model.Predio;
+import com.colcienciasWeb.Model.PropiedadAlimento;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.utilities.Conexion;
 import java.sql.PreparedStatement;
@@ -377,6 +378,29 @@ public class ColcienciasDao extends Conexion {
             eliminado = "Predio eliminado correctamente.";
         }
         return eliminado;
+    }
+
+    public PropiedadAlimento getTableNutritional(String tipoAlimento) {
+        PreparedStatement st1;
+        ResultSet result;
+        PropiedadAlimento table = null;
+        try {
+            st1 = this.getConexion().prepareStatement("SELECT \"TIPO_ALIMENTO\", \"PROTEINA_CRUDA\", \"PROTEINA_DIGESTIVA\", \"FIBRA_CRUDA\", \n"
+                    + "  \"CARBOHIDRATO\", \"EXTRACTOR_ETERO\"\n"
+                    + "  FROM public.\"PROPIEDADES_ALIMENTO\"\n"
+                    + "  WHERE \"TIPO_ALIMENTO\" = '"+ tipoAlimento +"'");
+            result = st1.executeQuery();
+            while (result.next()) {
+                table = new PropiedadAlimento(tipoAlimento, result.getDouble("PROTEINA_CRUDA"),
+                        result.getDouble("PROTEINA_DIGESTIVA"),
+                        result.getDouble("FIBRA_CRUDA"), result.getDouble("CARBOHIDRATO"),
+                        result.getDouble("EXTRACTOR_ETERO"));
+            }
+            result.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return table;
     }
 
 }
