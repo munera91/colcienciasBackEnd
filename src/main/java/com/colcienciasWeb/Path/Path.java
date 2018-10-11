@@ -29,4 +29,8 @@ public class Path {
     public class PathMunicipio{
         public static final String MUNICIPIOS =  "/municipios/{idDepartamento}";
     }
+    
+    public class PathPropAlimento{
+        public static final String ALIMENTO =  "/alimento/{idAlimento}";
+    }
 }

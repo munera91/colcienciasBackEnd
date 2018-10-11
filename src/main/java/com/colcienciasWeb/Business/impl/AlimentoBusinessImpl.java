@@ -6,12 +6,12 @@
 package com.colcienciasWeb.Business.impl;
 
 
-import com.colcienciasWeb.Business.IMunicipioBusiness;
-import com.colcienciasWeb.Model.Municipio;
+import com.colcienciasWeb.Business.IAlimentoBusiness;
+import com.colcienciasWeb.DAO.IAlimentoDao;
+import com.colcienciasWeb.Model.PropiedadAlimento;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.colcienciasWeb.DAO.IMunicipioDao;
 
 
 /**
@@ -19,15 +19,15 @@ import com.colcienciasWeb.DAO.IMunicipioDao;
  * @author sala305
  */
 @Service
-public class MunicipioBusinessImpl implements IMunicipioBusiness{
+public class AlimentoBusinessImpl implements IAlimentoBusiness{
 
     @Autowired
-    private IMunicipioDao municipioDao;
+    private IAlimentoDao alimentoDao;
 
 
     @Override
-    public List<Municipio> obtenerMunicipios(String idDepartamento) {
-        return municipioDao.obtenerMunicipios(idDepartamento);
+    public PropiedadAlimento obtenerPropiedadAlimento(String idAlimento) {
+        return alimentoDao.propiedadAlimento(idAlimento);
     }
     
 }

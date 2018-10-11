@@ -6,34 +6,31 @@
 package com.colcienciasWeb.DAO.impl;
 
 import com.colcienciasWeb.DAO.ColcienciasDao;
-import com.colcienciasWeb.Model.Municipio;
-import java.util.ArrayList;
-import java.util.List;
+import com.colcienciasWeb.Model.PropiedadAlimento;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
-import com.colcienciasWeb.DAO.IMunicipioDao;
+import com.colcienciasWeb.DAO.IAlimentoDao;
 
 /**
  *
  * @author sala305
  */
 @Repository
-public class MunicipioDaoImpl implements IMunicipioDao {
+public class AlimentoDaoImpl implements IAlimentoDao {
 
     ColcienciasDao dao = new ColcienciasDao();
 
     @Override
-    public List<Municipio> obtenerMunicipios(String idDepartamento) {
-        ArrayList<Municipio> municipios = new ArrayList<>();
+    public PropiedadAlimento propiedadAlimento(String idAlimento) {
+        PropiedadAlimento propiedadAlimento = null;
         try {
-            System.out.println("Entro DAO Municipios");
-            municipios = dao.getMunicipios(idDepartamento);
+            System.out.println("Entro DAO PropiedadAlimento");
+            propiedadAlimento = dao.getNutritionalTable(idAlimento);
         } catch (Exception ex) {
-            Logger.getLogger(MunicipioDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AlimentoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return municipios;
+        return propiedadAlimento;
     }
-
 
 }

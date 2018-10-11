@@ -385,7 +385,7 @@ public class ColcienciasDao extends Conexion {
         return eliminado;
     }
 
-    public PropiedadAlimento getTableNutritional(String tipoAlimento) {
+    public PropiedadAlimento getNutritionalTable(String tipoAlimento) {
         PreparedStatement st1;
         ResultSet result;
         PropiedadAlimento table = null;
