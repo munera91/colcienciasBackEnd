@@ -76,16 +76,10 @@ public class PredioDaoImpl implements IPredioDao {
 
     @Override
     public String modificarPredio(Predio predio) {
-        String respuesta = "Predio actualizado";
-        List<Predio> listado;
+        String respuesta = "No se pudo actualizar el predio";
         try {
-            listado = dao.getPredios(Integer.toString(predio.getIdFinca()));
-            for (int i = 0; i < listado.size(); i++) {
-                if (listado.get(i).getID() == predio.getID()) {
-                    dao.actualizarPredio(predio);
-                    break;
-                }
-            }
+            dao.actualizarPredio(predio);
+            respuesta = "Predio actualizado";
         } catch (Exception ex) {
             Logger.getLogger(PredioDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

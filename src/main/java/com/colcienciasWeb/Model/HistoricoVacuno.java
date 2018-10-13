@@ -12,7 +12,7 @@ package com.colcienciasWeb.Model;
 public class HistoricoVacuno {
     
     int idVacuno;
-    int mes;
+    String mes;
     int anio;
     Double peso;
     String idTipoAlimento;
@@ -20,7 +20,7 @@ public class HistoricoVacuno {
     int idPredio;
     String descripcionPredio;
 
-    public HistoricoVacuno(int idVacuno, int mes, int anio, Double peso, String idTipoAlimento, String descripcionTipoAlimento, int idPredio, String descripcionPredio) {
+    public HistoricoVacuno(int idVacuno, String mes, int anio, Double peso, String idTipoAlimento, String descripcionTipoAlimento, int idPredio, String descripcionPredio) {
         this.idVacuno = idVacuno;
         this.mes = mes;
         this.anio = anio;
@@ -42,11 +42,11 @@ public class HistoricoVacuno {
         this.idVacuno = idVacuno;
     }
 
-    public int getMes() {
+    public String getMes() {
         return mes;
     }
 
-    public void setMes(int mes) {
+    public void setMes(String mes) {
         this.mes = mes;
     }
 

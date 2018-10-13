@@ -37,8 +37,8 @@ public class VacunoBusinessImpl implements IVacunoBusiness{
     }
 
     @Override
-    public String eliminarVacuno(Vacuno vacuno) {
-        return vacunoDao.eliminarVacuno(vacuno);
+    public String eliminarVacuno(String idVacuno) {
+        return vacunoDao.eliminarVacuno(idVacuno);
     }
 
     @Override

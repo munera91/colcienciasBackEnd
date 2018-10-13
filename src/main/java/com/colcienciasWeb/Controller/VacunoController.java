@@ -65,9 +65,9 @@ public class VacunoController {
         return vacunoBusiness.modificarVacuno(vacuno);
     }
     
-    @DeleteMapping(PathVacuno.VACUNO)
-    public String eliminarVacuno(@RequestBody Vacuno vacuno,
+    @DeleteMapping(PathVacuno.VACUNO_ID)
+    public String eliminarVacuno(@PathVariable String idVacuno,
             HttpServletResponse hsr){
-        return vacunoBusiness.eliminarVacuno(vacuno);
+        return vacunoBusiness.eliminarVacuno(idVacuno);
     }
 }
