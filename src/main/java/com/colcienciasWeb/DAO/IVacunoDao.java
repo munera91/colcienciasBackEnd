@@ -6,7 +6,9 @@
 package com.colcienciasWeb.DAO;
 
 import com.colcienciasWeb.Model.HistoricoVacuno;
+import com.colcienciasWeb.Model.Simulacion;
 import com.colcienciasWeb.Model.Vacuno;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,5 +23,6 @@ public interface IVacunoDao {
     String eliminarVacuno(String idVacuno);
     String modificarVacuno(Vacuno vacuno);
     List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno);
+    Simulacion simulacion (ArrayList<Vacuno> vacunos);
     
 }

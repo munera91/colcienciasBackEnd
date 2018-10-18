@@ -10,6 +10,7 @@ import com.colcienciasWeb.DAO.IVacunoDao;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.Data.Data;
 import com.colcienciasWeb.Model.HistoricoVacuno;
+import com.colcienciasWeb.Model.Simulacion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,12 +37,12 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return vacunos;
     }
-    
+
     @Override
     public List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno) {
         ArrayList<HistoricoVacuno> historicoVacuno = new ArrayList<>();
         System.out.println("Entro DAO Historico vacuno");
-        historicoVacuno = dao.getHistoricoVacuno(idVacuno);             
+        historicoVacuno = dao.getHistoricoVacuno(idVacuno);
         return historicoVacuno;
     }
 
@@ -107,6 +108,35 @@ public class VacunoDaoImpl implements IVacunoDao {
         return respuesta;
     }
 
-    
+    @Override
+    public Simulacion simulacion(ArrayList<Vacuno> vacunos) {
+        Simulacion simulacion = null;
+        double consAguaMamones = 0.0, consAguaDestetados = 0.0;
+        double consAguaNovillos = 0.0, consAguaVacas = 0.0;
+        double consAgua = 0.0;
+        for (int i = 0; i < vacunos.size(); i++) {
+            vacunos.get(i).setIdCategoria(getCategoriaByPesoVacuno(vacunos.get(i).getPeso()));
+            consAgua = 0.0;
+            switch (vacunos.get(i).getIdCategoria()) {
+                case 1:
+                    consAguaMamones += consAgua;
+                    break;
+                case 2:
+                    consAguaDestetados += consAgua;
+                    break;
+                case 3:
+                    consAguaNovillos += consAgua;
+                    break;
+                case 4:
+                    consAguaVacas += consAgua;
+                    break;
+            }
+        }
+        simulacion.setConsAguaMamones(consAguaMamones);
+        simulacion.setConsAlimentDestetados(consAguaDestetados);
+        simulacion.setConsAlimentoNovillos(consAguaNovillos);
+        simulacion.setConsAlimentoVacas(consAguaVacas);
+        return simulacion;
+    }
 
 }
