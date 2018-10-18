@@ -411,57 +411,92 @@ public class ColcienciasDao extends Conexion {
         return table;
     }
 
-    public ConsumoAlimento getFoodConsumption(String categoriaVacuno) {
+    public double getCantidadAlimento(Vacuno vacuno) {
         PreparedStatement st1;
         ResultSet result;
-        ConsumoAlimento alimento = null;
+        double alimento = 0.0;
         try {
-            st1 = this.getConexion().prepareStatement("SELECT \"CATEGORIA_VACUNO\", \"CANTIDAD\"\n"
-                    + "FROM public.\"CONSUMO_ALIMENTO\"\n"
-                    + "WHERE \"CATEGORIA_VACUNO\" = '" + categoriaVacuno + "'");
-            result = st1.executeQuery();
-            while (result.next()) {
-                alimento = new ConsumoAlimento(categoriaVacuno, result.getDouble("CONSUMO_ALIMENTO"));
+            if (vacuno.getIdCategoria() != 4) {
+                st1 = this.getConexion().prepareStatement("SELECT  \"CANTIDAD\"\n"
+                        + "FROM public.\"CONSUMO_ALIMENTO\"\n"
+                        + "WHERE \"CATEGORIA_VACUNO\" = '" + vacuno.getIdCategoria() + "'");
+                result = st1.executeQuery();
+                while (result.next()) {
+                    alimento = result.getDouble("CANTIDAD");
+                }
+                result.close();
+            } else {
+                st1 = this.getConexion().prepareStatement("SELECT \"CATEGORIA_VACUNO\", \"CANTIDAD\"\n"
+                        + "FROM public.\"CONSUMO_ALIMENTO\"\n"
+                        + "WHERE \"CATEGORIA_VACUNO\" = '" + vacuno.getIdCategoria() + "'");
+                result = st1.executeQuery();
+                while (result.next()) {
+                    alimento = (result.getDouble("CANTIDAD") * vacuno.getPeso());
+                }
+                result.close();
+
             }
-            result.close();
         } catch (SQLException ex) {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return alimento;
     }
 
-    public ConsumoLiquido getLiquidConsumption(String categoriaVacuno) {
+    public double getCantidadLiquido(Vacuno vacuno) {
         PreparedStatement st1;
         ResultSet result;
-        ConsumoLiquido liquido = null;
+        double liquido = 0.0;
         try {
-            st1 = this.getConexion().prepareStatement("SELECT \"CATEGORIA_VACUNO\", \"CANTIDAD\"\n"
-                    + "FROM public.\"CONSUMO_LIQUIDO\"\n"
-                    + "WHERE \"CATEGORIA_VACUNO\" = '" + categoriaVacuno + "'");
-            result = st1.executeQuery();
-            while (result.next()) {
-                liquido = new ConsumoLiquido(categoriaVacuno, result.getDouble("CONSUMO_LIQUIDO"));
+            if (vacuno.getIdCategoria() != 4) {
+                st1 = this.getConexion().prepareStatement("SELECT  \"CANTIDAD\"\n"
+                        + "FROM public.\"CONSUMO_LIQUIDO\"\n"
+                        + "WHERE \"CATEGORIA_VACUNO\" = '" + vacuno.getIdCategoria() + "'");
+                result = st1.executeQuery();
+                while (result.next()) {
+                    liquido = result.getDouble("CANTIDAD");
+                }
+                result.close();
+            } else {
+                st1 = this.getConexion().prepareStatement("SELECT \"CANTIDAD\"\n"
+                        + "FROM public.\"CONSUMO_LIQUIDO\"\n"
+                        + "WHERE \"CATEGORIA_VACUNO\" = '" + vacuno.getIdCategoria() + "'");
+                result = st1.executeQuery();
+                while (result.next()) {
+                    liquido = (result.getDouble("CANTIDAD") * vacuno.getPeso());
+                }
+
             }
-            result.close();
         } catch (SQLException ex) {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return liquido;
     }
 
-    public CantidadHeces getCantidadHeces(String categoriaVacuno) {
+    public double getCantidadHeces(Vacuno vacuno) {
         PreparedStatement st1;
         ResultSet result;
-        CantidadHeces heces = null;
+        double heces = 0.0;
         try {
-            st1 = this.getConexion().prepareStatement("SELECT \"CATEGORIA_VACUNO\", \"CANTIDAD\"\n"
-                    + "FROM public.\"CANTIDAD_HECES\"\n"
-                    + "WHERE \"CATEGORIA_ID\" = '" + categoriaVacuno + "'");
-            result = st1.executeQuery();
-            while (result.next()) {
-                heces = new CantidadHeces(categoriaVacuno, result.getDouble("CONSUMO_LIQUIDO"));
+            if (vacuno.getIdCategoria() != 4) {
+                st1 = this.getConexion().prepareStatement("SELECT  \"CANTIDAD\"\n"
+                        + "FROM public.\"CANTIDAD_HECES\"\n"
+                        + "WHERE \"CATEGORIA_ID\" = '" + vacuno.getIdCategoria() + "'");
+                result = st1.executeQuery();
+                while (result.next()) {
+                    heces = result.getDouble("CANTIDAD");
+                }
+                result.close();
+            } else {
+                st1 = this.getConexion().prepareStatement("SELECT  \"CANTIDAD\"\n"
+                        + "FROM public.\"CANTIDAD_HECES\"\n"
+                        + "WHERE \"CATEGORIA_ID\" = '" + vacuno.getIdCategoria() + "'");
+                result = st1.executeQuery();
+                while (result.next()) {
+                    heces = (result.getDouble("CANTIDAD") * vacuno.getPeso());
+                }
+                result.close();
+
             }
-            result.close();
         } catch (SQLException ex) {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
