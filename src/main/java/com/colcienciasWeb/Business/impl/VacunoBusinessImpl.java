@@ -9,7 +9,9 @@ package com.colcienciasWeb.Business.impl;
 import com.colcienciasWeb.Business.IVacunoBusiness;
 import com.colcienciasWeb.DAO.IVacunoDao;
 import com.colcienciasWeb.Model.HistoricoVacuno;
+import com.colcienciasWeb.Model.Simulacion;
 import com.colcienciasWeb.Model.Vacuno;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,11 @@ public class VacunoBusinessImpl implements IVacunoBusiness{
     @Override
     public List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno) {
         return vacunoDao.obtenerHistoricoVacuno(idVacuno);
+    }
+
+    @Override
+    public Simulacion simulacion(ArrayList<Vacuno> vacunos) {
+        return vacunoDao.simulacion(vacunos);
     }
     
 }

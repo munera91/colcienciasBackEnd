@@ -110,32 +110,43 @@ public class VacunoDaoImpl implements IVacunoDao {
 
     @Override
     public Simulacion simulacion(ArrayList<Vacuno> vacunos) {
-        Simulacion simulacion = null;
+        Simulacion simulacion = new Simulacion();
         double consAguaMamones = 0.0, consAguaDestetados = 0.0;
         double consAguaNovillos = 0.0, consAguaVacas = 0.0;
-        double consAgua = 0.0;
+        double consAlimentoMamones = 0.0, consAlimentoDestetados = 0.0;
+        double consAlimentoNovillos = 0.0, consAlimentoVacas = 0.0;
+        double consAgua = 0.0, consAlimento = 0.0;
         for (int i = 0; i < vacunos.size(); i++) {
             vacunos.get(i).setIdCategoria(getCategoriaByPesoVacuno(vacunos.get(i).getPeso()));
-            consAgua = 0.0;
+            consAgua = dao.getCantidadLiquido(vacunos.get(i));
+            consAlimento = dao.getCantidadAlimento(vacunos.get(i));
             switch (vacunos.get(i).getIdCategoria()) {
                 case 1:
                     consAguaMamones += consAgua;
+                    consAlimentoMamones += consAlimento;
                     break;
                 case 2:
                     consAguaDestetados += consAgua;
+                    consAlimentoDestetados += consAlimento;
                     break;
                 case 3:
                     consAguaNovillos += consAgua;
+                    consAlimentoNovillos += consAlimento;
                     break;
                 case 4:
                     consAguaVacas += consAgua;
+                    consAlimentoVacas += consAlimento;
                     break;
             }
         }
         simulacion.setConsAguaMamones(consAguaMamones);
-        simulacion.setConsAlimentDestetados(consAguaDestetados);
-        simulacion.setConsAlimentoNovillos(consAguaNovillos);
-        simulacion.setConsAlimentoVacas(consAguaVacas);
+        simulacion.setConsAguaDestetados(consAguaDestetados);
+        simulacion.setConsAguaNovillos(consAguaNovillos);
+        simulacion.setConsAguaVacas(consAguaVacas);
+        simulacion.setConsAlimentoMamones(consAlimentoMamones);
+        simulacion.setConsAlimentDestetados(consAlimentoDestetados);
+        simulacion.setConsAlimentoNovillos(consAlimentoNovillos);
+        simulacion.setConsAlimentoVacas(consAlimentoVacas);
         return simulacion;
     }
 

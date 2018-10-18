@@ -8,8 +8,11 @@ package com.colcienciasWeb.Controller;
 
 import com.colcienciasWeb.Business.IVacunoBusiness;
 import com.colcienciasWeb.Model.HistoricoVacuno;
+import com.colcienciasWeb.Model.Simulacion;
 import com.colcienciasWeb.Model.Vacuno;
+import com.colcienciasWeb.Path.Path;
 import com.colcienciasWeb.Path.Path.PathVacuno;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,12 @@ public class VacunoController {
     public List<HistoricoVacuno> obtenerHistoricoVacuno(@PathVariable String idVacuno, 
             HttpServletResponse hsr) {
         return vacunoBusiness.obtenerHistoricoVacuno(idVacuno);
+    }
+    
+    @PostMapping(Path.PathSimulacion.SIMULAR)
+    public Simulacion simular(@RequestBody ArrayList<Vacuno> vacunos,
+            HttpServletResponse hsr){
+        return vacunoBusiness.simulacion(vacunos);
     }
     
     

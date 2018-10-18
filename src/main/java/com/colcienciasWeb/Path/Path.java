@@ -33,4 +33,8 @@ public class Path {
     public class PathPropAlimento{
         public static final String ALIMENTO =  "/alimento/{idAlimento}";
     }
+    
+    public class PathSimulacion{
+        public static final String SIMULAR =  "/simular";
+    }
 }
