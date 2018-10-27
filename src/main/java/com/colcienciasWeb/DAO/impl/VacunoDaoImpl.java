@@ -109,8 +109,11 @@ public class VacunoDaoImpl implements IVacunoDao {
     }
 
     @Override
-    public Simulacion simulacion(ArrayList<Vacuno> vacunos) {
+    public Simulacion simulacion(ArrayList<Vacuno> vacunos) {        
         Simulacion simulacion = new Simulacion();
+        if(vacunos.size() > 0){
+            simulacion = dao.getSimulacion(vacunos.get(0).getIdPredio());
+        }
         double consAguaMamones = 0.0, consAguaDestetados = 0.0;
         double consAguaNovillos = 0.0, consAguaVacas = 0.0;
         double consAlimentoMamones = 0.0, consAlimentoDestetados = 0.0;

@@ -5,14 +5,12 @@
  */
 package com.colcienciasWeb.DAO;
 
-import com.colcienciasWeb.Model.CantidadHeces;
-import com.colcienciasWeb.Model.ConsumoAlimento;
-import com.colcienciasWeb.Model.ConsumoLiquido;
 import com.colcienciasWeb.Model.Finca;
 import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Municipio;
 import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Model.PropiedadAlimento;
+import com.colcienciasWeb.Model.Simulacion;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.utilities.Conexion;
 import com.colcienciasWeb.utilities.Utilities;
@@ -501,6 +499,37 @@ public class ColcienciasDao extends Conexion {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return heces;
+    }
+
+    public Simulacion getSimulacion(int idPredio) {
+        Simulacion simulacion = null;
+        PreparedStatement st1;
+        ResultSet result;
+        try {
+            st1 = this.getConexion().prepareStatement("SELECT P.\"ID_PREDIO\", P.\"DESCRIPCION\", T.\"DESCRIPCION\" AS \"TIPOTERRENO\", COUNT(V.\"ID_VACUNO\") filter (WHERE V.\"CATEGORIA\" = '1') as \"TOTALMAMONES\",\n"
+                    + "COUNT(V.\"ID_VACUNO\") filter (WHERE V.\"CATEGORIA\" = '2') as \"TOTALDESTETADOS\",COUNT(V.\"ID_VACUNO\") filter (WHERE V.\"CATEGORIA\" = '3') as \"NOVILLOS\",\n"
+                    + "COUNT(V.\"ID_VACUNO\") filter (WHERE V.\"CATEGORIA\" = '4') as \"VACAS\",COUNT(V.\"ID_VACUNO\") as \"CANTBOVINOS\",TA.\"DESCRIPCION\" AS \"TIPOALIMENTO\", \n"
+                    + "PA.\"PROTEINA_CRUDA\", PA.\"PROTEINA_DIGESTIVA\", PA.\"FIBRA_CRUDA\",PA.\"CARBOHIDRATO\", PA.\"EXTRACTOR_ETERO\" FROM public.\"PREDIO\" P\n"
+                    + "INNER JOIN public.\"TIPO_TERRENO\" T ON (T.\"ID_TIPO_TERRENO\" = P.\"TIPO_TERRENO\")\n"
+                    + "INNER JOIN public.\"TIPO_ALIMENTACION\" TA ON (TA.\"ID_TIPO_ALIMENTACION\" = P.\"TIPO_ALIMENTACION\")\n"
+                    + "INNER JOIN public.\"PROPIEDADES_ALIMENTO\" PA ON (TA.\"ID_TIPO_ALIMENTACION\" = PA.\"TIPO_ALIMENTO\")\n"
+                    + "INNER JOIN public.\"VACUNO\" V ON (V.\"PREDIO\" = P.\"ID_PREDIO\")\n"
+                    + "INNER JOIN public.\"CATEGORIA_VACUNO\" C ON (C.\"ID_CATEGORIA\" = V.\"CATEGORIA\") \n"
+                    + "WHERE P.\"ID_PREDIO\" = " + idPredio + " GROUP BY P.\"ID_PREDIO\",T.\"DESCRIPCION\", "
+                    + "TA.\"DESCRIPCION\", PA.\"TIPO_ALIMENTO\"");
+            result = st1.executeQuery();
+            while (result.next()) {
+                simulacion = new Simulacion(result.getInt("ID_PREDIO"), result.getString("DESCRIPCION"),
+                        result.getString("TIPOTERRENO"), result.getInt("TOTALMAMONES"), result.getInt("TOTALDESTETADOS"),
+                        result.getInt("NOVILLOS"), result.getInt("VACAS"), result.getInt("CANTBOVINOS"),
+                        result.getString("TIPOALIMENTO"), result.getDouble("PROTEINA_CRUDA"), result.getDouble("PROTEINA_DIGESTIVA"),
+                        result.getDouble("FIBRA_CRUDA"), result.getDouble("CARBOHIDRATO"), result.getDouble("EXTRACTOR_ETERO"));
+            }
+            result.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return simulacion;
     }
 
 }

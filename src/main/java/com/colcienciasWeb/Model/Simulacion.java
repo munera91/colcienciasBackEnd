@@ -77,7 +77,22 @@ public class Simulacion {
         this.contaminacionVacas = contaminacionVacas;
     }
 
-   
+    public Simulacion(Integer idpredio, String descripcionPredio, String descTipoTerreno, Integer totalMamones, Integer totalDestetados, Integer totalNovillos, Integer totalVacas, Integer cantidadBovinos, String tipoAlimento, double proteinaCruda, double proteinaDigestiva, double fibraCruda, double carbohidrato, double extractorEtero) {
+        this.idpredio = idpredio;
+        this.descripcionPredio = descripcionPredio;
+        this.descTipoTerreno = descTipoTerreno;
+        this.totalMamones = totalMamones;
+        this.totalDestetados = totalDestetados;
+        this.totalNovillos = totalNovillos;
+        this.totalVacas = totalVacas;
+        this.cantidadBovinos = cantidadBovinos;
+        this.tipoAlimento = tipoAlimento;
+        this.proteinaCruda = proteinaCruda;
+        this.proteinaDigestiva = proteinaDigestiva;
+        this.fibraCruda = fibraCruda;
+        this.carbohidrato = carbohidrato;
+        this.extractorEtero = extractorEtero;
+    }   
 
     public Integer getIdpredio() {
         return idpredio;
