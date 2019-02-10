@@ -5,6 +5,9 @@
  */
 package com.colcienciasWeb.utilities;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  *
  * @author Usuario
@@ -40,6 +43,44 @@ public class Utilities {
             default:
                 return "Enero";
         }
+    }
+   
+    /**
+     * Retorna el MD5 de un string .
+     *
+     * @param message Message
+     * @return string message digest
+     */
+    public static String getStringMessageDigest(String message) {
+        byte[] digest = null;
+        byte[] buffer = message.getBytes();
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.reset();
+            messageDigest.update(buffer);
+            digest = messageDigest.digest();
+        } catch (NoSuchAlgorithmException ex) {
+            System.out.println("Error creando Digest");
+        }
+        return toHexadecimal(digest);
+    }
+    
+    /**
+     * Convierte un array de bites a hexadecimal.
+     *
+     * @param digest Digest
+     * @return the string
+     */
+    private static String toHexadecimal(byte[] digest) {
+        String hash = "";
+        for (byte aux : digest) {
+            int b = aux & 0xff;
+            if (Integer.toHexString(b).length() == 1) {
+                hash += "0";
+            }
+            hash += Integer.toHexString(b);
+        }
+        return hash;
     }
     
 }

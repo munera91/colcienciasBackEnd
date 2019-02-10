@@ -12,6 +12,7 @@ import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Model.PropiedadAlimento;
 import com.colcienciasWeb.Model.Simulacion;
 import com.colcienciasWeb.Model.Vacuno;
+import com.colcienciasWeb.Model.jpa.Usuario;
 import com.colcienciasWeb.utilities.Conexion;
 import com.colcienciasWeb.utilities.Utilities;
 import java.sql.PreparedStatement;
@@ -26,6 +27,53 @@ import java.util.logging.Logger;
  * @author Juliana. Maldonado
  */
 public class ColcienciasDao extends Conexion {
+
+    public String reestablecerPassword(Usuario usuario) {
+        PreparedStatement st;
+        String respuesta = "No fue posible actualizar la contraseña";
+        try {
+            st = this.getConexion().prepareStatement("UPDATE public.\"USUARIO\"\n"
+                    + " SET \"PASSWORD\"='" + usuario.getPassword() + "' WHERE "
+                    + "\"EMAIL\" = '" + usuario.getEmail() + "'");
+            st.executeUpdate();
+            respuesta = "Contraseña actualizada correctamente";
+            st.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return respuesta;
+    }
+
+    public String validarUsuario(Usuario usuario) throws SQLException {
+        String respuesta = "Datos incorrectos";
+        PreparedStatement st;
+        ResultSet result;
+        st = this.getConexion().prepareCall("SELECT * FROM public.\"USUARIO\" "
+                + "WHERE \"EMAIL\" = '" + usuario.getEmail() + "' ");
+        result = st.executeQuery();
+        while (result.next()) {
+            if(usuario.getPassword().equals(result.getString("PASSWORD"))){
+               respuesta = "usuario Valido"; 
+            }
+        }
+        st.close();
+        return respuesta;
+    }
+
+    public Usuario obtenerUsuario(String idUsuario) throws SQLException {
+        Usuario usuario = null;
+        PreparedStatement st;
+        ResultSet result2;
+        st = this.getConexion().prepareCall("SELECT * FROM public.\"USUARIO\" U "
+                + " WHERE U.\"IDENTIFICACION\" = '" + idUsuario + "' ");
+        result2 = st.executeQuery();
+        while (result2.next()) {
+            usuario = new Usuario(idUsuario, result2.getString("NOMBRE"),
+                    result2.getString("EMAIL"), result2.getString("PASSWORD"));
+        }
+        st.close();
+        return usuario;
+    }
 
     public ArrayList<Finca> getFincas() throws SQLException, Exception {
         ArrayList<Finca> listaFincas = new ArrayList();

@@ -14,6 +14,14 @@ public class Path {
         public static final String FINCA = "/finca";
         public static final String FINCA_ID = "/finca/{ID}";
     }
+    
+    public class PathUsuario{
+        public static final String VALUSUARIO = "/valUsuario";
+        public static final String USUARIO = "/usuario";
+        public static final String USUARIO_ID = "/usuario/{identificacion}";
+        public static final String USUARIO_EMAIL = "/usuario/{email}";
+    }
+    
     public class PathVacuno{
         public static final String VACUNO = "/vacuno";
         public static final String VACUNO_ID = "/vacuno/{idVacuno}";
