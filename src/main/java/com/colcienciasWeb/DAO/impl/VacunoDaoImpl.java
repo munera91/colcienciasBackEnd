@@ -11,6 +11,7 @@ import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.Data.Data;
 import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Simulacion;
+import com.colcienciasWeb.utilities.Utilities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -109,47 +110,89 @@ public class VacunoDaoImpl implements IVacunoDao {
     }
 
     @Override
-    public Simulacion simulacion(ArrayList<Vacuno> vacunos) {        
+    public Simulacion simulacion(ArrayList<Vacuno> vacunos) {
         Simulacion simulacion = new Simulacion();
-        if(vacunos.size() > 0){
+        if (vacunos.size() > 0) {
             simulacion = dao.getSimulacion(vacunos.get(0).getIdPredio());
         }
         double consAguaMamones = 0.0, consAguaDestetados = 0.0;
         double consAguaNovillos = 0.0, consAguaVacas = 0.0;
         double consAlimentoMamones = 0.0, consAlimentoDestetados = 0.0;
         double consAlimentoNovillos = 0.0, consAlimentoVacas = 0.0;
-        double consAgua = 0.0, consAlimento = 0.0;
+        double cantHecesMamones = 0.0, cantHecesDestetados = 0.0;
+        double cantHecesNovillos = 0.0, cantHecesVacas = 0.0;
+        double contaminacionMamones = 0.0, contaminacionDestetados = 0.0;
+        double contaminacionNovillos = 0.0, contaminacionVacas = 0.0;
+        double consAgua = 0.0, consAlimento = 0.0, consHeces = 0.0;
+        double nutrientes = 0.0, totalHeces = 0.0, totalContaminacion = 0.0;
+        double totalCO2 = 0.0, totalCH4 = 0.0, totalNO2 = 0.0;
         for (int i = 0; i < vacunos.size(); i++) {
             vacunos.get(i).setIdCategoria(getCategoriaByPesoVacuno(vacunos.get(i).getPeso()));
-            consAgua = dao.getCantidadLiquido(vacunos.get(i));
-            consAlimento = dao.getCantidadAlimento(vacunos.get(i));
+            consAgua = Utilities.redondear2Decimales(dao.getCantidadLiquido(vacunos.get(i)));
+            consAlimento = Utilities.redondear2Decimales(dao.getCantidadAlimento(vacunos.get(i)));
+            consHeces = Utilities.redondear2Decimales(dao.getCantidadHeces(vacunos.get(i)));
             switch (vacunos.get(i).getIdCategoria()) {
                 case 1:
                     consAguaMamones += consAgua;
                     consAlimentoMamones += consAlimento;
+                    cantHecesMamones += consHeces;
                     break;
                 case 2:
                     consAguaDestetados += consAgua;
                     consAlimentoDestetados += consAlimento;
+                    cantHecesDestetados += consHeces;
                     break;
                 case 3:
                     consAguaNovillos += consAgua;
                     consAlimentoNovillos += consAlimento;
+                    cantHecesNovillos += consHeces;
                     break;
                 case 4:
-                    consAguaVacas += consAgua;
+                    consAguaVacas += (consAgua * 3);
                     consAlimentoVacas += consAlimento;
+                    cantHecesVacas += consHeces;
                     break;
             }
         }
-        simulacion.setConsAguaMamones(consAguaMamones);
-        simulacion.setConsAguaDestetados(consAguaDestetados);
-        simulacion.setConsAguaNovillos(consAguaNovillos);
-        simulacion.setConsAguaVacas(consAguaVacas);
-        simulacion.setConsAlimentoMamones(consAlimentoMamones);
-        simulacion.setConsAlimentDestetados(consAlimentoDestetados);
-        simulacion.setConsAlimentoNovillos(consAlimentoNovillos);
-        simulacion.setConsAlimentoVacas(consAlimentoVacas);
+        simulacion.setConsAguaMamones(Utilities.redondear2Decimales(consAguaMamones));
+        simulacion.setConsAguaDestetados(Utilities.redondear2Decimales(consAguaDestetados));
+        simulacion.setConsAguaNovillos(Utilities.redondear2Decimales(consAguaNovillos));
+        simulacion.setConsAguaVacas(Utilities.redondear2Decimales(consAguaVacas));
+        simulacion.setConsAlimentoMamones(Utilities.redondear2Decimales(consAlimentoMamones));
+        simulacion.setConsAlimentDestetados(Utilities.redondear2Decimales(consAlimentoDestetados));
+        simulacion.setConsAlimentoNovillos(Utilities.redondear2Decimales(consAlimentoNovillos));
+        simulacion.setConsAlimentoVacas(Utilities.redondear2Decimales(consAlimentoVacas));
+        simulacion.setOrinaMamones(Utilities.redondear2Decimales(cantHecesMamones));
+        simulacion.setOrinaDestetados(Utilities.redondear2Decimales(cantHecesDestetados));
+        simulacion.setOrinaNovillos(Utilities.redondear2Decimales(cantHecesNovillos));
+        simulacion.setOrinaVacas(Utilities.redondear2Decimales(cantHecesVacas));
+        nutrientes = simulacion.getCarbohidrato() + simulacion.getExtractorEtero()
+                + simulacion.getFibraCruda() + simulacion.getProteinaCruda()
+                + simulacion.getProteinaDigestiva();
+        totalHeces = cantHecesDestetados + cantHecesMamones + cantHecesNovillos
+                + cantHecesVacas;
+        totalContaminacion = totalHeces * nutrientes;
+        contaminacionMamones = cantHecesMamones * nutrientes;
+        contaminacionDestetados = cantHecesDestetados * nutrientes;
+        contaminacionNovillos = cantHecesNovillos * nutrientes;
+        contaminacionVacas = cantHecesVacas * nutrientes;
+        //Calculo oxido de carbono
+        totalCO2 = totalContaminacion * 0.7;
+        //Calculo Gas metano
+        totalCH4 = totalContaminacion * 0.2;
+        //Calculo Oxido nitroso
+        totalNO2 = totalContaminacion * 0.1;
+        simulacion.setContaminacionMamones(Utilities.redondear2Decimales(contaminacionMamones));
+        simulacion.setContaminacionDestetados(Utilities.redondear2Decimales(contaminacionDestetados));
+        simulacion.setContaminacionNovillos(Utilities.redondear2Decimales(contaminacionNovillos));
+        simulacion.setContaminacionVacas(Utilities.redondear2Decimales(contaminacionVacas));
+        simulacion.setTotalCO2(Utilities.redondear2Decimales(totalCO2));
+        simulacion.setTotalCH4(Utilities.redondear2Decimales(totalCH4));
+        simulacion.setTotalNO2(Utilities.redondear2Decimales(totalNO2));
+        
+        //se llama al metodo que guarda la simulación realizada
+        dao.guardarSimulacion(simulacion, vacunos);
+        
         return simulacion;
     }
 

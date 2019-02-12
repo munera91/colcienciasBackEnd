@@ -13,8 +13,8 @@ import java.security.NoSuchAlgorithmException;
  * @author Usuario
  */
 public class Utilities {
-    
-   public static String MesIntAString(int mes) {
+
+    public static String MesIntAString(int mes) {
         switch (mes) {
             case 1:
                 return "Enero";
@@ -44,7 +44,15 @@ public class Utilities {
                 return "Enero";
         }
     }
-   
+
+    public static double redondear2Decimales(double d) {
+        //Multipliacmos el double por 100 y sacamos su parte entera,
+        //luego dividir entre 100.0 y así obtenemos el numero como decimal
+        //redondeado con 2 cifras decimales
+        int aux1 = (int) Math.round(d * 100);
+        return aux1 / 100.0;
+    }
+
     /**
      * Retorna el MD5 de un string .
      *
@@ -64,7 +72,7 @@ public class Utilities {
         }
         return toHexadecimal(digest);
     }
-    
+
     /**
      * Convierte un array de bites a hexadecimal.
      *
@@ -82,5 +90,5 @@ public class Utilities {
         }
         return hash;
     }
-    
+
 }

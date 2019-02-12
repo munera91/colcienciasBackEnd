@@ -40,11 +40,14 @@ public class Simulacion {
     double contaminacionDestetados;
     double contaminacionNovillos;
     double contaminacionVacas;
+    double totalCO2;
+    double totalCH4;
+    double totalNO2;
 
     public Simulacion() {
     }
 
-    public Simulacion(Integer idpredio, String descripcionPredio, String descTipoTerreno, Integer totalMamones, Integer totalDestetados, Integer totalNovillos, Integer totalVacas, Integer cantidadBovinos, String tipoAlimento, double proteinaCruda, double proteinaDigestiva, double fibraCruda, double carbohidrato, double extractorEtero, double consAguaMamones, double consAguaDestetados, double consAguaNovillos, double consAguaVacas, double consAlimentoMamones, double consAlimentDestetados, double consAlimentoNovillos, double consAlimentoVacas, double orinaMamones, double orinaDestetados, double orinaNovillos, double orinaVacas, double contaminacionMamones, double contaminacionDestetados, double contaminacionNovillos, double contaminacionVacas) {
+    public Simulacion(Integer idpredio, String descripcionPredio, String descTipoTerreno, Integer totalMamones, Integer totalDestetados, Integer totalNovillos, Integer totalVacas, Integer cantidadBovinos, String tipoAlimento, double proteinaCruda, double proteinaDigestiva, double fibraCruda, double carbohidrato, double extractorEtero, double consAguaMamones, double consAguaDestetados, double consAguaNovillos, double consAguaVacas, double consAlimentoMamones, double consAlimentDestetados, double consAlimentoNovillos, double consAlimentoVacas, double orinaMamones, double orinaDestetados, double orinaNovillos, double orinaVacas, double contaminacionMamones, double contaminacionDestetados, double contaminacionNovillos, double contaminacionVacas, double totalCO2, double totalCH4, double totalNO2) {
         this.idpredio = idpredio;
         this.descripcionPredio = descripcionPredio;
         this.descTipoTerreno = descTipoTerreno;
@@ -75,7 +78,12 @@ public class Simulacion {
         this.contaminacionDestetados = contaminacionDestetados;
         this.contaminacionNovillos = contaminacionNovillos;
         this.contaminacionVacas = contaminacionVacas;
+        this.totalCO2 = totalCO2;
+        this.totalCH4 = totalCH4;
+        this.totalNO2 = totalNO2;
     }
+
+    
 
     public Simulacion(Integer idpredio, String descripcionPredio, String descTipoTerreno, Integer totalMamones, Integer totalDestetados, Integer totalNovillos, Integer totalVacas, Integer cantidadBovinos, String tipoAlimento, double proteinaCruda, double proteinaDigestiva, double fibraCruda, double carbohidrato, double extractorEtero) {
         this.idpredio = idpredio;
@@ -332,6 +340,30 @@ public class Simulacion {
 
     public void setContaminacionDestetados(double contaminacionDestetados) {
         this.contaminacionDestetados = contaminacionDestetados;
+    }
+
+    public double getTotalCO2() {
+        return totalCO2;
+    }
+
+    public void setTotalCO2(double totalCO2) {
+        this.totalCO2 = totalCO2;
+    }
+
+    public double getTotalCH4() {
+        return totalCH4;
+    }
+
+    public void setTotalCH4(double totalCH4) {
+        this.totalCH4 = totalCH4;
+    }
+
+    public double getTotalNO2() {
+        return totalNO2;
+    }
+
+    public void setTotalNO2(double totalNO2) {
+        this.totalNO2 = totalNO2;
     }
     
     

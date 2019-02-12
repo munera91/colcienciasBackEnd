@@ -52,8 +52,8 @@ public class ColcienciasDao extends Conexion {
                 + "WHERE \"EMAIL\" = '" + usuario.getEmail() + "' ");
         result = st.executeQuery();
         while (result.next()) {
-            if(usuario.getPassword().equals(result.getString("PASSWORD"))){
-               respuesta = "usuario Valido"; 
+            if (usuario.getPassword().equals(result.getString("PASSWORD"))) {
+                respuesta = "usuario Valido";
             }
         }
         st.close();
@@ -191,10 +191,11 @@ public class ColcienciasDao extends Conexion {
                     + "FROM public.\"VACUNO_HISTORICO\" VH INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = VH.\"ALIMENTO\")\n"
                     + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + ""
                     + " ORDER BY \"MES\", \"ANIO\" desc");
+
             System.out.println("SELECT \"VACUNO_ID\", \"MES\", \"ANIO\", \"PESO\", \"ALIMENTO\", A.\"DESCRIPCION\" AS \"DESCALIMENTO\",\"PREDIO\" , P.\"DESCRIPCION\" AS \"DESCPREDIO\",\"FECHA_REGISTRO\"\n"
                     + "FROM public.\"VACUNO_HISTORICO\" VH INNER JOIN public.\"TIPO_ALIMENTACION\" A ON (A.\"ID_TIPO_ALIMENTACION\" = VH.\"ALIMENTO\")\n"
                     + "INNER JOIN public.\"PREDIO\" P ON (P.\"ID_PREDIO\" = VH.\"PREDIO\") WHERE \"VACUNO_ID\" = " + idVacuno + ""
-                    + " ORDER BY \"ANIO\" desc, \"MES\" desc");
+                    + " ORDER BY \"MES\", \"ANIO\" desc");
             result = st.executeQuery();
             while (result.next()) {
                 historicoVacuno.add(new HistoricoVacuno(result.getInt("VACUNO_ID"), Utilities.MesIntAString(result.getInt("MES")), result.getInt("ANIO"),
@@ -526,7 +527,7 @@ public class ColcienciasDao extends Conexion {
             if (vacuno.getIdCategoria() != 4) {
                 st1 = this.getConexion().prepareStatement("SELECT  \"CANTIDAD\"\n"
                         + "FROM public.\"CANTIDAD_HECES\"\n"
-                        + "WHERE \"CATEGORIA_ID\" = '" + vacuno.getIdCategoria() + "'");
+                        + "WHERE \"CATEGORIA_VACUNO\" = '" + vacuno.getIdCategoria() + "'");
                 result = st1.executeQuery();
                 while (result.next()) {
                     heces = result.getDouble("CANTIDAD");
@@ -535,7 +536,7 @@ public class ColcienciasDao extends Conexion {
             } else {
                 st1 = this.getConexion().prepareStatement("SELECT  \"CANTIDAD\"\n"
                         + "FROM public.\"CANTIDAD_HECES\"\n"
-                        + "WHERE \"CATEGORIA_ID\" = '" + vacuno.getIdCategoria() + "'");
+                        + "WHERE \"CATEGORIA_VACUNO\" = '" + vacuno.getIdCategoria() + "'");
                 result = st1.executeQuery();
                 while (result.next()) {
                     heces = (result.getDouble("CANTIDAD") * vacuno.getPeso());
@@ -578,6 +579,44 @@ public class ColcienciasDao extends Conexion {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return simulacion;
+    }
+    
+        public void guardarSimulacion(Simulacion simulacion, ArrayList<Vacuno> vacunos) {
+        try {
+            PreparedStatement st1, st2;
+            ResultSet result, result2;
+            st1 = this.getConexion().prepareStatement("INSERT INTO public.\"SIMULACION\"(\n"
+                    + "\"ID_SIMULACION\", \"ID_PREDIO\", \"TOTAL_MAMONES\", \"TOTAL_DESTETADOS\", \n"
+                    + "\"TOTAL_NOVILLOS\", \"TOTAL_VACAS\", \"TOTAL_BOVINOS\", \"TIPO_ALIMENTO\", \n"
+                    + "\"consAguaMamones\", \"consAguaDestetados\", \"consAguaNovillos\", \n"
+                    + "\"consAguaVacas\", \"consAlimentoMamones\", \"consAlimentDestetados\", \n"
+                    + "\"consAlimentoNovillos\", \"consAlimentoVacas\", \"orinaMamones\", \n"
+                    + "\"orinaDestetados\", \"orinaNovillos\", \"orinaVacas\", \"contaminacionMamones\", \n"
+                    + "\"contaminacionDestetados\", \"contaminacionNovillos\", \"contaminacionVacas\", \n"
+                    + "\"FECHA\", \"totalCO2\", \"totalCH4\", \"totalNO2\")\n"
+                    + " VALUES (DEFAULT," + simulacion.getIdpredio() + "," + simulacion.getTotalMamones() + "," + simulacion.getTotalDestetados() + ", \n"
+                    + "" + simulacion.getTotalNovillos() + "," + simulacion.getTotalVacas() + "," + simulacion.getCantidadBovinos() + ",'" + simulacion.getTipoAlimento() + "', \n"
+                    + "" + simulacion.getConsAguaMamones() + "," + simulacion.getConsAguaDestetados() + "," + simulacion.getConsAguaNovillos() + ", \n"
+                    + "" + simulacion.getConsAguaVacas() + "," + simulacion.getConsAlimentoMamones() + "," + simulacion.getConsAlimentDestetados() + ", \n"
+                    + "" + simulacion.getConsAlimentoNovillos() + "," + simulacion.getConsAlimentoVacas() + "," + simulacion.getOrinaMamones() + ", \n"
+                    + "" + simulacion.getOrinaDestetados() + "," + simulacion.getOrinaNovillos() + "," + simulacion.getOrinaVacas() + "," + simulacion.getContaminacionMamones() + ", \n"
+                    + "" + simulacion.getContaminacionDestetados() + "," + simulacion.getContaminacionNovillos() + "," + simulacion.getContaminacionVacas() + ", \n"
+                    + "CURRENT_DATE," + simulacion.getTotalCO2() + "," + simulacion.getTotalCH4() + "," + simulacion.getTotalNO2() + ") RETURNING \"ID_SIMULACION\"");
+            result = st1.executeQuery();
+            while (result.next()) {
+                for (int i = 0; i < vacunos.size(); i++) {
+                    st2 = this.getConexion().prepareStatement("INSERT INTO public.\"SIMULACION_VACUNO\"(\n"
+                            + " \"ID_SIMULACION\", \"ID_VACUNO\", \"PESO\")\n"
+                            + " VALUES ("+result.getInt("ID_SIMULACION")+","+vacunos.get(i).getID()+","+vacunos.get(i).getPeso()+")");
+                    result2 = st2.executeQuery();
+                    result2.close();
+                }
+            }
+            result.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
