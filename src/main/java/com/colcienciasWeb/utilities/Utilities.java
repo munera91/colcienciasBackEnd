@@ -7,6 +7,8 @@ package com.colcienciasWeb.utilities;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -89,6 +91,20 @@ public class Utilities {
             hash += Integer.toHexString(b);
         }
         return hash;
+    }
+    
+    public static int restarFechas(java.util.Date fecha1, java.util.Date fecha2) {
+        GregorianCalendar t1 = new GregorianCalendar(fecha1.getYear(), fecha1.getMonth(), fecha1.getDate());
+        GregorianCalendar t2 = new GregorianCalendar(fecha2.getYear(), fecha2.getMonth(), fecha2.getDate());
+        int dias;
+        if (t1.get(Calendar.YEAR) == t2.get(Calendar.YEAR)) {
+            dias = t2.get(Calendar.DAY_OF_YEAR) - t1.get(Calendar.DAY_OF_YEAR);
+        } else {
+            int diasAnyo = t1.isLeapYear(t1.get(Calendar.YEAR)) ? 366 : 365;
+            int rangoAnyos = t2.get(Calendar.YEAR) - t1.get(Calendar.YEAR);
+            dias = (rangoAnyos * diasAnyo) + (t2.get(Calendar.DAY_OF_YEAR) - t1.get(Calendar.DAY_OF_YEAR));
+        }
+        return dias;
     }
 
 }

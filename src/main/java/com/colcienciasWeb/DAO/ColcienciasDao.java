@@ -583,7 +583,7 @@ public class ColcienciasDao extends Conexion {
     
         public void guardarSimulacion(Simulacion simulacion, ArrayList<Vacuno> vacunos) {
         try {
-            PreparedStatement st1, st2;
+            PreparedStatement st1, st2 = null;
             ResultSet result, result2;
             st1 = this.getConexion().prepareStatement("INSERT INTO public.\"SIMULACION\"(\n"
                     + "\"ID_SIMULACION\", \"ID_PREDIO\", \"TOTAL_MAMONES\", \"TOTAL_DESTETADOS\", \n"
@@ -608,12 +608,11 @@ public class ColcienciasDao extends Conexion {
                     st2 = this.getConexion().prepareStatement("INSERT INTO public.\"SIMULACION_VACUNO\"(\n"
                             + " \"ID_SIMULACION\", \"ID_VACUNO\", \"PESO\")\n"
                             + " VALUES ("+result.getInt("ID_SIMULACION")+","+vacunos.get(i).getID()+","+vacunos.get(i).getPeso()+")");
-                    result2 = st2.executeQuery();
-                    result2.close();
+                    st2.executeUpdate();
                 }
             }
-            result.close();
-            
+            st2.close();
+            result.close();            
         } catch (SQLException ex) {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }

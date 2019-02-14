@@ -8,15 +8,16 @@ package com.colcienciasWeb.DAO.implJPA;
 import com.colcienciasWeb.DAO.IUsuarioDao;
 import com.colcienciasWeb.Model.jpa.Usuario;
 import com.colcienciasWeb.utilities.Utilities;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.print.attribute.standard.Destination;
 import javax.transaction.Transactional;
-import org.jboss.logging.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ResourceProperties.Content;
-import org.springframework.http.StreamingHttpOutputMessage.Body;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,16 +31,27 @@ public class UsuarioDaoImplJPA implements IUsuarioDao {
     @Autowired
     private EntityManager entityManager;
 
+    private SimpleDateFormat simpleDateFormat = null;
+    Date fechaUltCambio = null;
+    Date fechaActual = new Date();
+
     @Override
     @Transactional
     public Boolean cambiarPassword(Usuario usuario) {
-        Boolean actualizada;
+        Boolean actualizada = false;
+        Integer permitirCambio = null;
         Usuario user = (Usuario) entityManager.find(Usuario.class, usuario.getIdentificacion());
         if (user != null) {
-            System.out.println("Nombre user: " + user.getNombre());
-            user.setPassword(Utilities.getStringMessageDigest(usuario.getPassword()));
-            entityManager.merge(user);
-            actualizada = true;
+                System.out.println("Nombre user: " + user.getNombre());
+                if (user.getUltCambioFecha() != null) {
+                    fechaUltCambio = user.getUltCambioFecha();                    
+                    permitirCambio = Utilities.restarFechas(fechaUltCambio, fechaActual);
+                } else {
+                    permitirCambio = 1;
+                }
+                user.setPassword(Utilities.getStringMessageDigest(usuario.getPassword()));
+                entityManager.merge(user);
+                actualizada = true;
         } else {
             actualizada = false;
         }

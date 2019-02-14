@@ -6,6 +6,7 @@
 package com.colcienciasWeb.Model.jpa;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -43,6 +44,8 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
  
     private String password;
+    
+    private Date ultCambioFecha;
 
     public Usuario() {
     }
@@ -93,6 +96,14 @@ public class Usuario implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getUltCambioFecha() {
+        return ultCambioFecha;
+    }
+
+    public void setUltCambioFecha(Date ultCambioFecha) {
+        this.ultCambioFecha = ultCambioFecha;
     }
 
     @Override
