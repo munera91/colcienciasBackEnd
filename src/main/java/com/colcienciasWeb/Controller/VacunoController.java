@@ -54,12 +54,7 @@ public class VacunoController {
             HttpServletResponse hsr){
         return vacunoBusiness.simulacion(vacunos);
     }
-    
-    @GetMapping(Path.PathSimulacion.SIMULACION)
-    public Simulacion obtenerSimulacion (@PathVariable int ID_SIMULACION, 
-            HttpServletResponse hsr){
-        return vacunoBusiness.getSimulacion(ID_SIMULACION);
-    }
+
     
     @GetMapping(Path.PathSimulacion.HIST_SIMULACION)
     public List<Vacuno> obtenerHistoricoSimulacion(@PathVariable int ID_SIMULACION, 

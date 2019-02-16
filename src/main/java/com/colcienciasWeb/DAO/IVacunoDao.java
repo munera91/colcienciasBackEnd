@@ -24,7 +24,6 @@ public interface IVacunoDao {
     String modificarVacuno(Vacuno vacuno);
     List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno);
     Simulacion simulacion (ArrayList<Vacuno> vacunos);
-    Simulacion getSimulacion(Integer idSimulacion);
     List<Vacuno> obtenerVacunosBYSimulacion(Integer idSimulacion);
     
 }
