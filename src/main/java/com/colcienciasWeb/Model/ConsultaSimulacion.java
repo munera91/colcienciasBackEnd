@@ -5,7 +5,6 @@
  */
 package com.colcienciasWeb.Model;
 
-import java.util.Date;
 
 /**
  *
@@ -14,14 +13,14 @@ import java.util.Date;
 public class ConsultaSimulacion {
     
     private int idFinca;
-    private java.util.Date fechaInicio;
-    private java.util.Date fechaFin;
+    private Fecha fechaInicio;
+    private Fecha fechaFin;
 
     public ConsultaSimulacion() {
         
     }
 
-    public ConsultaSimulacion(int idFinca, Date fechaInicio, Date fechaFin) {
+    public ConsultaSimulacion(int idFinca, Fecha fechaInicio, Fecha fechaFin) {
         this.idFinca = idFinca;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -35,21 +34,23 @@ public class ConsultaSimulacion {
         this.idFinca = idFinca;
     }
 
-    public Date getFechaInicio() {
+    public Fecha getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(Fecha fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public Fecha getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(Fecha fechaFin) {
         this.fechaFin = fechaFin;
     }
+
+    
 
     @Override
     public int hashCode() {
