@@ -5,7 +5,6 @@
  */
 package com.colcienciasWeb.Business.impl;
 
-
 import com.colcienciasWeb.Business.IVacunoBusiness;
 import com.colcienciasWeb.DAO.IVacunoDao;
 import com.colcienciasWeb.Model.HistoricoVacuno;
@@ -16,17 +15,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 /**
  *
  * @author sala305
  */
 @Service
-public class VacunoBusinessImpl implements IVacunoBusiness{
+public class VacunoBusinessImpl implements IVacunoBusiness {
 
     @Autowired
     private IVacunoDao vacunoDao;
- 
 
     @Override
     public Vacuno obtenerVacuno(String idVacuno) {
@@ -53,7 +50,6 @@ public class VacunoBusinessImpl implements IVacunoBusiness{
         return vacunoDao.obtenerVacunos(idPredio);
     }
 
-    
     @Override
     public List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno) {
         return vacunoDao.obtenerHistoricoVacuno(idVacuno);
@@ -63,5 +59,15 @@ public class VacunoBusinessImpl implements IVacunoBusiness{
     public Simulacion simulacion(ArrayList<Vacuno> vacunos) {
         return vacunoDao.simulacion(vacunos);
     }
-    
+
+    @Override
+    public Simulacion getSimulacion(Integer idSimulacion) {
+        return vacunoDao.getSimulacion(idSimulacion);
+    }
+
+    @Override
+    public List<Vacuno> obtenerVacunosBYSimulacion(Integer idSimulacion) {
+        return vacunoDao.obtenerVacunosBYSimulacion(idSimulacion);
+    }
+
 }
