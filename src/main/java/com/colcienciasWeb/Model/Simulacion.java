@@ -11,6 +11,7 @@ package com.colcienciasWeb.Model;
  */
 public class Simulacion {
     Integer idpredio;
+    
     String descripcionPredio;
     String descTipoTerreno;
     Integer totalMamones;
