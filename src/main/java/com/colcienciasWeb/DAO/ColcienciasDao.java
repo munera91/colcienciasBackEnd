@@ -5,11 +5,14 @@
  */
 package com.colcienciasWeb.DAO;
 
+import com.colcienciasWeb.Model.ConsultaSimulacion;
+import com.colcienciasWeb.Model.Fecha;
 import com.colcienciasWeb.Model.Finca;
 import com.colcienciasWeb.Model.HistoricoVacuno;
 import com.colcienciasWeb.Model.Municipio;
 import com.colcienciasWeb.Model.Predio;
 import com.colcienciasWeb.Model.PropiedadAlimento;
+import com.colcienciasWeb.Model.RegistroSimulacion;
 import com.colcienciasWeb.Model.Simulacion;
 import com.colcienciasWeb.Model.Vacuno;
 import com.colcienciasWeb.Model.jpa.Usuario;
@@ -114,7 +117,7 @@ public class ColcienciasDao extends Conexion {
         ResultSet result;
         st = this.getConexion().prepareCall("SELECT \"ID_VACUNO\", \"PESO\"\n"
                 + "FROM public.\"SIMULACION_VACUNO\"\n"
-                + "WHERE \"ID_SIMULACION\" = "+idSimulacion+"");
+                + "WHERE \"ID_SIMULACION\" = " + idSimulacion + "");
         result = st.executeQuery();
         while (result.next()) {
             vaca = getVacunoBYID(result.getInt("ID_VACUNO"));
@@ -669,6 +672,32 @@ public class ColcienciasDao extends Conexion {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return simulacion;
+    }
+
+    public ArrayList<RegistroSimulacion> getSimulaciones(ConsultaSimulacion parametros) {
+        ArrayList<RegistroSimulacion> simulaciones = null;
+        RegistroSimulacion registro = null;
+        PreparedStatement st1;
+        ResultSet result;
+        try {
+            st1 = this.getConexion().prepareStatement("SELECT S.\"ID_SIMULACION\", S.\"FECHA\",P.\"DESCRIPCION\" AS PREDIO ,"
+                    + "S.\"TOTAL_BOVINOS\", S.\"TIPO_ALIMENTO\"\n"
+                    + "FROM public.\"SIMULACION\" S\n"
+                    + "INNER JOIN public.\"PREDIO\"P ON (S.\"ID_PREDIO\" = P.\"ID_PREDIO\")\n"
+                    + "WHERE P.\"ID_FINCA\" = " + parametros.getIdFinca() + " AND "
+                    + "S.\"FECHA\" BETWEEN('" + parametros.getFechaInicio() + "' AND '" + parametros.getFechaFin() + "')");
+            result = st1.executeQuery();
+            while (result.next()) {
+                registro = new RegistroSimulacion(result.getInt("ID_SIMULACION"), Fecha.valueOf(result.getDate("FECHA").toString()),
+                        result.getString("PREDIO"), result.getInt("TOTAL_BOVINOS"), result.getString("TIPO_ALIMENTO"));
+                simulaciones.add(registro);
+            }
+            st1.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return simulaciones;
     }
 
 }
