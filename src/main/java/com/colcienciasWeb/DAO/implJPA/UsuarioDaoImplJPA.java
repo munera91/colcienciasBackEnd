@@ -31,7 +31,6 @@ public class UsuarioDaoImplJPA implements IUsuarioDao {
     @Autowired
     private EntityManager entityManager;
 
-    private SimpleDateFormat simpleDateFormat = null;
     Date fechaUltCambio = null;
     Date fechaActual = new Date();
 
@@ -42,16 +41,19 @@ public class UsuarioDaoImplJPA implements IUsuarioDao {
         Integer permitirCambio = null;
         Usuario user = (Usuario) entityManager.find(Usuario.class, usuario.getIdentificacion());
         if (user != null) {
-                System.out.println("Nombre user: " + user.getNombre());
-                if (user.getUltCambioFecha() != null) {
-                    fechaUltCambio = user.getUltCambioFecha();                    
-                    permitirCambio = Utilities.restarFechas(fechaUltCambio, fechaActual);
-                } else {
-                    permitirCambio = 1;
-                }
-                user.setPassword(Utilities.getStringMessageDigest(usuario.getPassword()));
-                entityManager.merge(user);
-                actualizada = true;
+            System.out.println("Nombre user: " + user.getNombre());
+            if (user.getUltCambioFecha() != null) {
+                fechaUltCambio = user.getUltCambioFecha();
+                permitirCambio = Utilities.restarFechas(fechaUltCambio, fechaActual);
+            } else {
+                permitirCambio = 0;
+            }
+            if (permitirCambio != 0) {
+                return false;
+            }
+            user.setPassword(Utilities.getStringMessageDigest(usuario.getPassword()));
+            entityManager.merge(user);
+            actualizada = true;
         } else {
             actualizada = false;
         }
