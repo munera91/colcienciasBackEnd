@@ -107,6 +107,24 @@ public class ColcienciasDao extends Conexion {
         return listavacunos;
     }
 
+    public ArrayList<Vacuno> getVacunosBYSimulacion(Integer idSimulacion) throws SQLException, Exception {
+        ArrayList<Vacuno> listavacunos = new ArrayList();
+        Vacuno vaca = null;
+        PreparedStatement st;
+        ResultSet result;
+        st = this.getConexion().prepareCall("SELECT \"ID_VACUNO\", \"PESO\"\n"
+                + "FROM public.\"SIMULACION_VACUNO\"\n"
+                + "WHERE \"ID_SIMULACION\" = "+idSimulacion+"");
+        result = st.executeQuery();
+        while (result.next()) {
+            vaca = getVacunoBYID(result.getInt("ID_VACUNO"));
+            vaca.setPeso(result.getDouble("PESO"));
+            listavacunos.add(vaca);
+        }
+        st.close();
+        return listavacunos;
+    }
+
     public ArrayList<Predio> getPredios(String idFinca) throws SQLException, Exception {
         ArrayList<Predio> listaPredios = new ArrayList();
         PreparedStatement st;
@@ -580,8 +598,8 @@ public class ColcienciasDao extends Conexion {
         }
         return simulacion;
     }
-    
-        public void guardarSimulacion(Simulacion simulacion, ArrayList<Vacuno> vacunos) {
+
+    public void guardarSimulacion(Simulacion simulacion, ArrayList<Vacuno> vacunos) {
         try {
             PreparedStatement st1, st2 = null;
             ResultSet result, result2;
@@ -607,15 +625,50 @@ public class ColcienciasDao extends Conexion {
                 for (int i = 0; i < vacunos.size(); i++) {
                     st2 = this.getConexion().prepareStatement("INSERT INTO public.\"SIMULACION_VACUNO\"(\n"
                             + " \"ID_SIMULACION\", \"ID_VACUNO\", \"PESO\")\n"
-                            + " VALUES ("+result.getInt("ID_SIMULACION")+","+vacunos.get(i).getID()+","+vacunos.get(i).getPeso()+")");
+                            + " VALUES (" + result.getInt("ID_SIMULACION") + "," + vacunos.get(i).getID() + "," + vacunos.get(i).getPeso() + ")");
                     st2.executeUpdate();
                 }
             }
             st2.close();
-            result.close();            
+            result.close();
         } catch (SQLException ex) {
             Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public Simulacion getSimulacionBYID(int idsimulacion) {
+        Simulacion simulacion = null;
+        Predio predio = null;
+        PropiedadAlimento alimento = null;
+        PreparedStatement st1;
+        ResultSet result;
+        try {
+            st1 = this.getConexion().prepareStatement("SELECT \"ID_PREDIO\", \"TOTAL_MAMONES\", \"TOTAL_DESTETADOS\", \n"
+                    + " \"TOTAL_NOVILLOS\", \"TOTAL_VACAS\", \"TOTAL_BOVINOS\", \"TIPO_ALIMENTO\", \n"
+                    + " \"consAguaMamones\", \"consAguaDestetados\", \"consAguaNovillos\", \n"
+                    + " \"consAguaVacas\", \"consAlimentoMamones\", \"consAlimentDestetados\", \n"
+                    + " \"consAlimentoNovillos\", \"consAlimentoVacas\", \"orinaMamones\", \n"
+                    + "  \"orinaDestetados\", \"orinaNovillos\", \"orinaVacas\", \"contaminacionMamones\", \n"
+                    + "  \"contaminacionDestetados\", \"contaminacionNovillos\", \"contaminacionVacas\", \n"
+                    + "  \"FECHA\", \"totalCO2\", \"totalCH4\", \"totalNO2\"\n"
+                    + "  FROM public.\"SIMULACION\" WHERE \"ID_SIMULACION\" = " + idsimulacion + "");
+            result = st1.executeQuery();
+            while (result.next()) {
+                predio = getPredioBYID(result.getInt("ID_PREDIO"));
+                alimento = getNutritionalTable(result.getString("TIPO_ALIMENTO"));
+                simulacion = new Simulacion(result.getInt("ID_PREDIO"), predio.getDescripcion(),
+                        predio.getDescTipoAlimentacion(), result.getInt("TOTAL_MAMONES"), result.getInt("TOTAL_DESTETADOS"),
+                        result.getInt("TOTAL_NOVILLOS"), result.getInt("TOTAL_VACAS"), result.getInt("TOTAL_BOVINOS"),
+                        alimento.getTipoAlimento(), alimento.getProteinaCruda(), alimento.getProteinaDigestiva(),
+                        alimento.getFibraCruda(), alimento.getCarbohidrato(), alimento.getExtractorEtero());
+            }
+            result.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ColcienciasDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return simulacion;
     }
 
 }

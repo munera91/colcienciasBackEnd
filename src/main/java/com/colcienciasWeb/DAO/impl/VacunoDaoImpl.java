@@ -24,9 +24,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class VacunoDaoImpl implements IVacunoDao {
-
+    
     ColcienciasDao dao = new ColcienciasDao();
-
+    
     @Override
     public List<Vacuno> obtenerVacunos(String idPredio) {
         ArrayList<Vacuno> vacunos = new ArrayList<>();
@@ -38,7 +38,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return vacunos;
     }
-
+    
     @Override
     public List<HistoricoVacuno> obtenerHistoricoVacuno(String idVacuno) {
         ArrayList<HistoricoVacuno> historicoVacuno = new ArrayList<>();
@@ -46,7 +46,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         historicoVacuno = dao.getHistoricoVacuno(idVacuno);
         return historicoVacuno;
     }
-
+    
     @Override
     public Vacuno obtenerVacuno(String idVacuno) {
         Vacuno vacuno = null;
@@ -57,7 +57,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return vacuno;
     }
-
+    
     @Override
     public String crearVacuno(Vacuno vacuno) {
         String respuesta = "";
@@ -70,7 +70,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return respuesta;
     }
-
+    
     public int getCategoriaByPesoVacuno(Double peso) {
         int categoriaVacuno = 0;
         if (peso <= 180.0) {
@@ -84,7 +84,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return categoriaVacuno;
     }
-
+    
     @Override
     public String eliminarVacuno(String idVacuno) {
         String respuesta = "";
@@ -95,7 +95,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return respuesta;
     }
-
+    
     @Override
     public String modificarVacuno(Vacuno vacuno) {
         String respuesta = "No se pudo actualizar el vacuno";
@@ -108,7 +108,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         }
         return respuesta;
     }
-
+    
     @Override
     public Simulacion simulacion(ArrayList<Vacuno> vacunos) {
         Simulacion simulacion = new Simulacion();
@@ -189,11 +189,30 @@ public class VacunoDaoImpl implements IVacunoDao {
         simulacion.setTotalCO2(Utilities.redondear2Decimales(totalCO2));
         simulacion.setTotalCH4(Utilities.redondear2Decimales(totalCH4));
         simulacion.setTotalNO2(Utilities.redondear2Decimales(totalNO2));
-        
+
         //se llama al metodo que guarda la simulación realizada
         dao.guardarSimulacion(simulacion, vacunos);
         
         return simulacion;
     }
-
+    
+    @Override
+    public Simulacion getSimulacion(Integer idSimulacion) {
+        Simulacion simulacion = new Simulacion();
+        simulacion = dao.getSimulacionBYID(idSimulacion);
+        return simulacion; 
+    }
+    
+    @Override
+     public List<Vacuno> obtenerVacunosBYSimulacion(Integer idSimulacion) {
+        ArrayList<Vacuno> vacunos = new ArrayList<>();
+        try {
+            System.out.println("Entro DAO");
+            vacunos = dao.getVacunosBYSimulacion(idSimulacion);
+        } catch (Exception ex) {
+            Logger.getLogger(VacunoDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vacunos;
+    }
+    
 }

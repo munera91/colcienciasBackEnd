@@ -55,6 +55,18 @@ public class VacunoController {
         return vacunoBusiness.simulacion(vacunos);
     }
     
+    @GetMapping(Path.PathSimulacion.SIMULACION)
+    public Simulacion obtenerSimulacion (@PathVariable int ID_SIMULACION, 
+            HttpServletResponse hsr){
+        return vacunoBusiness.getSimulacion(ID_SIMULACION);
+    }
+    
+    @GetMapping(Path.PathSimulacion.HIST_SIMULACION)
+    public List<Vacuno> obtenerHistoricoSimulacion(@PathVariable int ID_SIMULACION, 
+            HttpServletResponse hsr) {
+        return vacunoBusiness.obtenerVacunosBYSimulacion(ID_SIMULACION);
+    }
+    
     
     @GetMapping(PathVacuno.VACUNO_ID)
     public Vacuno obtenerVacuno (@PathVariable String idVacuno, 
