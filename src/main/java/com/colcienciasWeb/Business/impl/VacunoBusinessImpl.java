@@ -61,11 +61,6 @@ public class VacunoBusinessImpl implements IVacunoBusiness {
     }
 
     @Override
-    public Simulacion getSimulacion(Integer idSimulacion) {
-        return vacunoDao.getSimulacion(idSimulacion);
-    }
-
-    @Override
     public List<Vacuno> obtenerVacunosBYSimulacion(Integer idSimulacion) {
         return vacunoDao.obtenerVacunosBYSimulacion(idSimulacion);
     }

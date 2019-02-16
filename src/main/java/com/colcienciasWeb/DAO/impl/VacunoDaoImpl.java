@@ -195,13 +195,7 @@ public class VacunoDaoImpl implements IVacunoDao {
         
         return simulacion;
     }
-    
-    @Override
-    public Simulacion getSimulacion(Integer idSimulacion) {
-        Simulacion simulacion = new Simulacion();
-        simulacion = dao.getSimulacionBYID(idSimulacion);
-        return simulacion; 
-    }
+
     
     @Override
      public List<Vacuno> obtenerVacunosBYSimulacion(Integer idSimulacion) {

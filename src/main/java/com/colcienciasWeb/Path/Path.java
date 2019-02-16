@@ -46,5 +46,6 @@ public class Path {
         public static final String SIMULAR =  "/simular";
         public static final String SIMULACION =  "/simulacion";
         public static final String HIST_SIMULACION =  "/historicoSimulacion";
-    }
+    }  
+    
 }
