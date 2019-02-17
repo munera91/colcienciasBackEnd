@@ -115,13 +115,15 @@ public class ColcienciasDao extends Conexion {
         Vacuno vaca = null;
         PreparedStatement st;
         ResultSet result;
-        st = this.getConexion().prepareCall("SELECT \"ID_VACUNO\", \"PESO\"\n"
-                + "FROM public.\"SIMULACION_VACUNO\"\n"
-                + "WHERE \"ID_SIMULACION\" = " + idSimulacion + "");
+        st = this.getConexion().prepareCall("SELECT H.\"ID_VACUNO\", H.\"PESO\", S.\"ID_PREDIO\"\n"
+                + "FROM public.\"SIMULACION_VACUNO\"H\n"
+                + "INNER JOIN public.\"SIMULACION\" S ON (H.\"ID_SIMULACION\" = S.\"ID_SIMULACION\")\n"
+                + "WHERE H.\"ID_SIMULACION\" = "+idSimulacion+"");
         result = st.executeQuery();
         while (result.next()) {
             vaca = getVacunoBYID(result.getInt("ID_VACUNO"));
             vaca.setPeso(result.getDouble("PESO"));
+            vaca.setIdPredio(result.getInt("ID_PREDIO"));
             listavacunos.add(vaca);
         }
         st.close();
@@ -664,14 +666,14 @@ public class ColcienciasDao extends Conexion {
                         result.getInt("TOTAL_NOVILLOS"), result.getInt("TOTAL_VACAS"), result.getInt("TOTAL_BOVINOS"),
                         alimento.getTipoAlimento(), alimento.getProteinaCruda(), alimento.getProteinaDigestiva(),
                         alimento.getFibraCruda(), alimento.getCarbohidrato(), alimento.getExtractorEtero(), result.getDouble("consAguaMamones"),
-                        result.getDouble("consAguaDestetados"), result.getDouble("consAguaNovillos"), 
+                        result.getDouble("consAguaDestetados"), result.getDouble("consAguaNovillos"),
                         result.getDouble("consAguaVacas"), result.getDouble("consAlimentoMamones"), result.getDouble("consAlimentDestetados"),
                         result.getDouble("consAlimentoNovillos"), result.getDouble("consAlimentoVacas"), result.getDouble("orinaMamones"),
                         result.getDouble("orinaDestetados"), result.getDouble("orinaNovillos"), result.getDouble("orinaVacas"),
                         result.getDouble("contaminacionMamones"), result.getDouble("contaminacionDestetados"), result.getDouble("contaminacionNovillos"),
-                        result.getDouble("contaminacionVacas"), result.getDouble("totalCO2"), 
+                        result.getDouble("contaminacionVacas"), result.getDouble("totalCO2"),
                         result.getDouble("totalCH4"), result.getDouble("totalNO2"));
-                        
+
             }
             result.close();
         } catch (SQLException ex) {
