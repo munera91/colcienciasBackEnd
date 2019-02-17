@@ -663,7 +663,15 @@ public class ColcienciasDao extends Conexion {
                         predio.getDescTipoAlimentacion(), result.getInt("TOTAL_MAMONES"), result.getInt("TOTAL_DESTETADOS"),
                         result.getInt("TOTAL_NOVILLOS"), result.getInt("TOTAL_VACAS"), result.getInt("TOTAL_BOVINOS"),
                         alimento.getTipoAlimento(), alimento.getProteinaCruda(), alimento.getProteinaDigestiva(),
-                        alimento.getFibraCruda(), alimento.getCarbohidrato(), alimento.getExtractorEtero());
+                        alimento.getFibraCruda(), alimento.getCarbohidrato(), alimento.getExtractorEtero(), result.getDouble("consAguaMamones"),
+                        result.getDouble("consAguaDestetados"), result.getDouble("consAguaNovillos"), 
+                        result.getDouble("consAguaVacas"), result.getDouble("consAlimentoMamones"), result.getDouble("consAlimentDestetados"),
+                        result.getDouble("consAlimentoNovillos"), result.getDouble("consAlimentoVacas"), result.getDouble("orinaMamones"),
+                        result.getDouble("orinaDestetados"), result.getDouble("orinaNovillos"), result.getDouble("orinaVacas"),
+                        result.getDouble("contaminacionMamones"), result.getDouble("contaminacionDestetados"), result.getDouble("contaminacionNovillos"),
+                        result.getDouble("contaminacionVacas"), result.getDouble("totalCO2"), 
+                        result.getDouble("totalCH4"), result.getDouble("totalNO2"));
+                        
             }
             result.close();
         } catch (SQLException ex) {
